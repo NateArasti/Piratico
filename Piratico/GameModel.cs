@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Piratico
@@ -25,33 +27,27 @@ namespace Piratico
 
         public static void MovePlayerToNewTile(MapTile newMapTile)
         {
+            var path = new Queue<MapTile>();
+            _currentMapCell.FillPathBetweenMapTiles(path,
+                _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y], newMapTile);
+            if (newMapTile.Index < _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y].Index)
+                path = new Queue<MapTile>(path.Reverse());
+            path.Enqueue(newMapTile);
             _timer = new Timer {Interval = 200};
-            _timer.Tick += (sender, args) => MoveToNextTile(newMapTile);
+            _timer.Tick += (sender, args) => MoveToNextTile(path);
             _timer.Start();
         }
 
-        private static void MoveToNextTile(MapTile finishTile)
+        private static void MoveToNextTile(Queue<MapTile> path)
         {
-            var nextTile = _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y];
-            Rotations newRotation = Rotations.Down;
-            foreach (var direction in MapCell.MapDirections)
-            {
-                if (MapCell.CheckIfInBorders(_player.MapPosition.X + direction.Value.X,
-                        _player.MapPosition.Y + direction.Value.Y) &&
-                    nextTile.PathsLengths[finishTile.MapPosition.X, finishTile.MapPosition.Y] >
-                    _currentMapCell.Map[_player.MapPosition.X + direction.Value.X, _player.MapPosition.Y + direction.Value.Y]
-                        .PathsLengths[finishTile.MapPosition.X, finishTile.MapPosition.Y])
-                {
-                    nextTile = _currentMapCell.Map[_player.MapPosition.X + direction.Value.X, _player.MapPosition.Y + direction.Value.Y];
-                    newRotation = Player.DirectionsRotations[direction.Key];
-                }
-
-            }
-            _player.RotateTo(newRotation);
+            var newTile = path.Dequeue();
+            var delta = new Point(newTile.MapPosition.X - _player.MapPosition.X,
+                newTile.MapPosition.Y - _player.MapPosition.Y);
+            _player.RotateTo(Player.DirectionsRotations[MapCell.MapDirections[delta]]);
             _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y].SpriteBox.Controls.Remove(_player.SpriteBox);
-            nextTile.SpriteBox.Controls.Add(_player.SpriteBox);
-            _player.MapPosition = nextTile.MapPosition;
-            if (_player.MapPosition == finishTile.MapPosition)
+            newTile.SpriteBox.Controls.Add(_player.SpriteBox);
+            _player.MapPosition = newTile.MapPosition;
+            if (path.Count == 0)
                 _timer.Stop();
         }
     }

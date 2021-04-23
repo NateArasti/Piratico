@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 namespace Piratico
@@ -17,20 +15,23 @@ namespace Piratico
 
     internal class MapCell
     {
-        public static readonly Size MapSize = new Size(8, 6);
+        public static readonly Size MapSize = new Size(4, 3);
         public readonly int DeltaFromBorders;
 
-        public static IReadOnlyDictionary<Directions, Point> MapDirections = new Dictionary<Directions, Point>
+        public static IReadOnlyDictionary<Point, Directions> MapDirections = new Dictionary<Point, Directions>
         {
-            {Directions.Down, new Point(0, 1)},
-            {Directions.Up, new Point(0, -1)},
-            {Directions.Right, new Point(1, 0)},
-            {Directions.Left, new Point(-1, 0)}
+            {new Point(0, 1), Directions.Down},
+            {new Point(0, -1), Directions.Up},
+            {new Point(1, 0), Directions.Right},
+            {new Point(-1, 0), Directions.Left}
         };
-        
+
         private readonly Dictionary<Directions, MapCell> neighbors;
 
         public readonly MapTile[,] Map = new MapTile[MapSize.Width, MapSize.Height];
+
+        private readonly Tuple<int, MapTile>[,] paths = new Tuple<int, MapTile>[MapSize.Width * MapSize.Height, MapSize.Width * MapSize.Height];
+        private readonly List<Point> allTiles = new List<Point>();
 
         public readonly Panel MapCellController;
 
@@ -89,7 +90,9 @@ namespace Piratico
             for (var i = 0; i < MapSize.Width; i++)
             for (var j = 0; j < MapSize.Height; j++)
             {
-                Map[i, j] = new MapTile(new Point(i, j));
+                var point = new Point(i, j);
+                allTiles.Add(point);
+                Map[i, j] = new MapTile(point, allTiles.Count - 1);
                 Map[i, j].SpriteBox.Location = new Point(DeltaFromBorders + i * GameModel.TileSize, j * GameModel.TileSize);
                 MapCellController.Controls.Add(Map[i, j].SpriteBox);
             }
@@ -98,39 +101,43 @@ namespace Piratico
 
         private void GetPathsBetweenTiles()
         {
-            //TODO:Нужно ускорить этот алгоритм...
-            for (var i = 0; i < MapSize.Width; i++)
-            for (var j = 0; j < MapSize.Height; j++)
+            const int infinite = int.MaxValue;
+            var length = allTiles.Count;
+            for (var i = 0; i < length; i++)
+            for (var j = i; j < length; j++)
             {
-                var startCell = new Point(i, j);
-                Map[i, j].PathsLengths[i, j] = 0;
-                var visited = new HashSet<Point> { startCell };
-                var queue = new Queue<Point>();
-                queue.Enqueue(startCell);
-                while (queue.Count != 0)
+                if (i == j) paths[i, j] = Tuple.Create(0, Map[allTiles[i].X, allTiles[i].Y]);
+                else if (MapDirections.ContainsKey(new Point(allTiles[i].X - allTiles[j].X,
+                    allTiles[i].Y - allTiles[j].Y)))
                 {
-                    var currentCell = queue.Dequeue();
-                    visited.Add(currentCell);
-                    for (var dx = -1; dx <= 1; dx++)
-                    for (var dy = -1; dy <= 1; dy++)
-                    {
-                        if(Math.Abs(dx) + Math.Abs(dy) != 1)
-                            continue;
-                        var newCell = new Point(currentCell.X + dx, currentCell.Y + dy);
-                        if (CheckIfInBorders(newCell.X, newCell.Y) &&
-                            !visited.Contains(newCell) && 
-                            Map[newCell.X, newCell.Y].TileType == MapTileType.Sea)
-                        {
-                            queue.Enqueue(newCell);
-                            Map[i, j].PathsLengths[newCell.X, newCell.Y] =
-                                Map[i, j].PathsLengths[currentCell.X, currentCell.Y] + 1;
-                        }
-                    }
+                    paths[i, j] = Tuple.Create(1, Map[allTiles[i].X, allTiles[i].Y]);
+                    paths[j, i] = Tuple.Create(1, Map[allTiles[j].X, allTiles[j].Y]);
                 }
+                else
+                {
+                    paths[i, j] = Tuple.Create(infinite, Map[allTiles[j].X, allTiles[j].Y]);
+                    paths[j, i] = Tuple.Create(infinite, Map[allTiles[i].X, allTiles[i].Y]);
+                }
+            }
+            for (var k = 0; k < length; ++k)
+            for (var i = 0; i < length; ++i)
+            for (var j = 0; j < length; ++j)
+            {
+                if (paths[i, k].Item1 < infinite && paths[k, j].Item1 < infinite &&
+                    paths[i, j].Item1 > paths[i, k].Item1 + paths[k, j].Item1)
+                    paths[i, j] = Tuple.Create(paths[i, k].Item1 + paths[k, j].Item1,
+                        Map[allTiles[k].X, allTiles[k].Y]);
             }
         }
 
-        public static bool CheckIfInBorders(int x, int y) => x >= 0 && x < MapSize.Width &&
-                                                             y >= 0 && y < MapSize.Height;
+        public void FillPathBetweenMapTiles(Queue<MapTile> path, MapTile start, MapTile finish)
+        {
+            if(paths[start.Index, finish.Index].Item2 != start)
+            {
+                FillPathBetweenMapTiles(path, start, paths[start.Index, finish.Index].Item2);
+                FillPathBetweenMapTiles(path, paths[start.Index, finish.Index].Item2, finish);
+                path.Enqueue(paths[start.Index, finish.Index].Item2);
+            }
+        }
     }
 }

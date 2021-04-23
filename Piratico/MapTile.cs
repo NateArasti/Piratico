@@ -17,10 +17,11 @@ namespace Piratico
         public readonly PictureBox SpriteBox;
 
         public readonly Point MapPosition;
-        public readonly int[,] PathsLengths = new int[MapCell.MapSize.Width, MapCell.MapSize.Height];
+        public readonly int Index;
 
-        public MapTile(Point mapPosition)
+        public MapTile(Point mapPosition, int index)
         {
+            Index = index;
             MapPosition = mapPosition;
             TileType = MapTileType.Sea;
             SpriteBox = new PictureBox
