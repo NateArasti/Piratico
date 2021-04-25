@@ -15,7 +15,7 @@ namespace Piratico
 
     internal class MapCell
     {
-        public static readonly Size MapSize = new Size(4, 3);
+        public static readonly Size MapSize = new Size(20, 15);
         public readonly int DeltaFromBorders;
 
         public static IReadOnlyDictionary<Point, Directions> MapDirections = new Dictionary<Point, Directions>
@@ -130,14 +130,16 @@ namespace Piratico
             }
         }
 
-        public void FillPathBetweenMapTiles(Queue<MapTile> path, MapTile start, MapTile finish)
+        public void FillPathBetweenMapTiles(HashSet<MapTile> path, MapTile start, MapTile finish)
         {
             if(paths[start.Index, finish.Index].Item2 != start)
             {
-                FillPathBetweenMapTiles(path, start, paths[start.Index, finish.Index].Item2);
                 FillPathBetweenMapTiles(path, paths[start.Index, finish.Index].Item2, finish);
-                path.Enqueue(paths[start.Index, finish.Index].Item2);
+                FillPathBetweenMapTiles(path, start, paths[start.Index, finish.Index].Item2);
+                path.Add(paths[start.Index, finish.Index].Item2);
             }
         }
+
+        public bool InBorders(Point point) => point.X >= 0 && point.X < MapSize.Width && point.Y >= 0 && point.Y < MapSize.Height;
     }
 }

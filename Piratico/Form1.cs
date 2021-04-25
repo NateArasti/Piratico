@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Piratico
@@ -17,7 +16,8 @@ namespace Piratico
 
         private void Init()
         {
-            gameModel = new GameModel(this);
+            gameModel = new GameModel(ClientSize);
+            Controls.Add(GameModel.CurrentMapCell.MapCellController);
             GameTimer.Start();
         }
 

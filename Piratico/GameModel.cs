@@ -8,47 +8,56 @@ namespace Piratico
     class GameModel
     {
         private static Timer _timer = new Timer();
+        private static bool timerStarted;
 
-        private static MapCell _currentMapCell;
-        private static Player _player;
+        public static MapCell CurrentMapCell { get; private set; }
+        public static Player Player { get; private set; }
         public static int TileSize { get; private set; } = 64;
         public static int Width { get; private set; } = 1280;
 
-        public GameModel(Control formControl)
+        public GameModel(Size clientSize)
         {
-            TileSize = formControl.ClientSize.Height / MapCell.MapSize.Height;
-            Width = formControl.ClientSize.Width;
-            _currentMapCell = new MapCell();
-            _currentMapCell.GenerateNeighbors();
-            formControl.Controls.Add(_currentMapCell.MapCellController);
-            _player = new Player(Resources.PlayerShip, new Point(0, 0), new Size(TileSize, TileSize), new Point(0, 0));
-            _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y].SpriteBox.Controls.Add(_player.SpriteBox);
+            TileSize = clientSize.Height / MapCell.MapSize.Height;
+            Width = clientSize.Width;
+            CurrentMapCell = new MapCell();
+            CurrentMapCell.GenerateNeighbors();
+            Player = new Player(Resources.PlayerShip, new Point(0, 0), new Size(TileSize, TileSize), new Point(0, 0));
+            CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox.Controls.Add(Player.SpriteBox);
         }
 
         public static void MovePlayerToNewTile(MapTile newMapTile)
         {
-            var path = new Queue<MapTile>();
-            _currentMapCell.FillPathBetweenMapTiles(path,
-                _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y], newMapTile);
-            if (newMapTile.Index < _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y].Index)
-                path = new Queue<MapTile>(path.Reverse());
-            path.Enqueue(newMapTile);
+            if(timerStarted) return;
+            timerStarted = true;
+            var path = new HashSet<MapTile>();
+            CurrentMapCell.FillPathBetweenMapTiles(path,
+                CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y], newMapTile);
+            path.Add(newMapTile);
             _timer = new Timer {Interval = 200};
             _timer.Tick += (sender, args) => MoveToNextTile(path);
             _timer.Start();
         }
 
-        private static void MoveToNextTile(Queue<MapTile> path)
+        private static void MoveToNextTile(HashSet<MapTile> path)
         {
-            var newTile = path.Dequeue();
-            var delta = new Point(newTile.MapPosition.X - _player.MapPosition.X,
-                newTile.MapPosition.Y - _player.MapPosition.Y);
-            _player.RotateTo(Player.DirectionsRotations[MapCell.MapDirections[delta]]);
-            _currentMapCell.Map[_player.MapPosition.X, _player.MapPosition.Y].SpriteBox.Controls.Remove(_player.SpriteBox);
-            newTile.SpriteBox.Controls.Add(_player.SpriteBox);
-            _player.MapPosition = newTile.MapPosition;
+            var newTile = path.First();
+            foreach (var direction in MapCell.MapDirections.Keys)
+            {
+                var newPoint = new Point(Player.MapPosition.X + direction.X, Player.MapPosition.Y + direction.Y);
+                if (!CurrentMapCell.InBorders(newPoint) || !path.Contains(CurrentMapCell.Map[newPoint.X, newPoint.Y])) continue;
+                newTile = CurrentMapCell.Map[newPoint.X, newPoint.Y]; 
+                path.Remove(newTile);
+                Player.RotateTo(Player.DirectionsRotations[MapCell.MapDirections[direction]]);
+                break;
+            }
+            CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox.Controls.Remove(Player.SpriteBox);
+            newTile.SpriteBox.Controls.Add(Player.SpriteBox);
+            Player.MapPosition = newTile.MapPosition;
             if (path.Count == 0)
+            {
                 _timer.Stop();
+                timerStarted = false;
+            }
         }
     }
 }
