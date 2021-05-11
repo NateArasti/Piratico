@@ -13,6 +13,8 @@ namespace Piratico
         Down = 270
     }
 
+    // Player сейчас почти ничего не умеет (судя по коду).
+    // Он пассивен. В нем должна быть логика его действий.
     internal class Player
     {
         public static IReadOnlyDictionary<Directions, Rotations> DirectionsRotations = new Dictionary<Directions, Rotations>

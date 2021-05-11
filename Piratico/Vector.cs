@@ -44,6 +44,16 @@ namespace Piratico
 
         public int? Angle()
         {
+            // метод можно записать так (для этого только нужно включить поддержку C# 9):
+            //return (X, Y) switch
+            //{
+            //    (0, 0) => default(int?),
+            //    (<0, 0) => 180,
+            //    (>0, 0) => 0,
+            //    (0, <0) => 90,
+            //    (0, >0) => 270,
+            //    _ => (int) -Math.Atan((double) Y / X)
+            //};
             if (X == 0)
             {
                 if (Y == 0) return null;
@@ -56,6 +66,7 @@ namespace Piratico
                 if (X > 0) return 0;
                 return 180;
             }
+            // тут можно использовать -Math.Atan2(Y, X)
             return (int) -Math.Atan((double) Y / X);
         }
 

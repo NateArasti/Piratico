@@ -25,6 +25,8 @@ namespace Piratico
             CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox.Controls.Add(Player.SpriteBox);
         }
 
+        // В следующих двух методах много рутины и низкоуровневых действий. Класс игры находится на высоком уровне абстракции.
+        // Он должен делегировать большинство своей работы другим объектам.
         public static void MovePlayerToNewTile(MapTile newMapTile)
         {
             if(timerStarted) return;
@@ -33,6 +35,8 @@ namespace Piratico
             CurrentMapCell.FillPathBetweenMapTiles(path,
                 CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y], newMapTile);
             path.Add(newMapTile);
+            // старый таймер был Disposable его нужно Dispose прежде, чем выбросить.
+            // А может быть тут лучше не создавать таймер каждый раз.
             _timer = new Timer {Interval = 200};
             _timer.Tick += (sender, args) => MoveToNextTile(path);
             _timer.Start();
@@ -40,6 +44,8 @@ namespace Piratico
 
         private static void MoveToNextTile(HashSet<MapTile> path)
         {
+            // не стоит полагаться на то, что HashSet хранит объекты в порядке добавления.
+            // Для явного порядка лучше использовать очередь.
             var newTile = path.First();
             foreach (var direction in MapCell.MapDirections.Keys)
             {

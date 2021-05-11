@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace Piratico
 {
+    // Обычно размещают по одному классу в файле
     public enum Directions
     {
         Up,
@@ -30,9 +31,11 @@ namespace Piratico
 
         public readonly MapTile[,] Map = new MapTile[MapSize.Width, MapSize.Height];
 
+        // лучше использовать value tuples или отдельный класс
         private readonly Tuple<int, MapTile>[,] paths = new Tuple<int, MapTile>[MapSize.Width * MapSize.Height, MapSize.Width * MapSize.Height];
         private readonly List<Point> allTiles = new List<Point>();
 
+        // что он контролирует?
         public readonly Panel MapCellController;
 
         public MapCell()
@@ -92,6 +95,7 @@ namespace Piratico
             {
                 var point = new Point(i, j);
                 allTiles.Add(point);
+                // лучше сначала полностью настроить MapTile, а потом присвоить везде где нужно
                 Map[i, j] = new MapTile(point, allTiles.Count - 1);
                 Map[i, j].SpriteBox.Location = new Point(DeltaFromBorders + i * GameModel.TileSize, j * GameModel.TileSize);
                 MapCellController.Controls.Add(Map[i, j].SpriteBox);
@@ -106,6 +110,10 @@ namespace Piratico
             for (var i = 0; i < length; i++)
             for (var j = i; j < length; j++)
             {
+                // текущую схему с путями сложно понять, давай вместо двумерного массива заведем словарь с
+                // ключем - класс, который знает точку начала и точку конца
+                // значением - MapTile
+                // так назначение полей будет проще понять
                 if (i == j) paths[i, j] = Tuple.Create(0, Map[allTiles[i].X, allTiles[i].Y]);
                 else if (MapDirections.ContainsKey(new Point(allTiles[i].X - allTiles[j].X,
                     allTiles[i].Y - allTiles[j].Y)))
