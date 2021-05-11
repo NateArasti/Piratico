@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -7,55 +8,53 @@ namespace Piratico
 {
     class GameModel
     {
-        private static Timer _timer = new Timer();
-        private static bool timerStarted;
+        private readonly PiraticoGame gameForm;
 
-        public static MapCell CurrentMapCell { get; private set; }
-        public static Player Player { get; private set; }
+        private Timer timer = new Timer();
+        private bool timerStarted;
+
+        public MapCell CurrentMapCell { get; private set; }
+        public Player Player { get; }
+        public MapTile CurrentPlayerTile => CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y];
         public static int TileSize { get; private set; } = 64;
         public static int Width { get; private set; } = 1280;
 
-        public GameModel(Size clientSize)
+        public GameModel(PiraticoGame gameForm)
         {
-            TileSize = clientSize.Height / MapCell.MapSize.Height;
-            Width = clientSize.Width;
-            CurrentMapCell = new MapCell();
+            this.gameForm = gameForm;
+            TileSize = gameForm.ClientSize.Height / MapCell.MapSize.Height;
+            Width = gameForm.ClientSize.Width;
+            CurrentMapCell = new MapCell(this);
             CurrentMapCell.GenerateNeighbors();
-            Player = new Player(Resources.PlayerShip, new Point(0, 0), new Size(TileSize, TileSize), new Point(0, 0));
+            Player = new Player(Resources.PlayerShip, new Point(0, 0), new Size(TileSize, TileSize), new Point(10, 10));
             CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox.Controls.Add(Player.SpriteBox);
         }
 
-        public static void MovePlayerToNewTile(MapTile newMapTile)
+        public void MovePlayerToNewTile(MapTile newMapTile)
         {
             if(timerStarted) return;
             timerStarted = true;
+
             var path = new HashSet<MapTile>();
             CurrentMapCell.FillPathBetweenMapTiles(path,
-                CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y], newMapTile);
+                CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y], 
+                newMapTile);
             path.Add(newMapTile);
-            _timer = new Timer {Interval = 200};
-            _timer.Tick += (sender, args) => MoveToNextTile(path);
-            _timer.Start();
+
+            timer = new Timer {Interval = 200};
+            timer.Tick += (sender, args) => MoveToNextTile(path);
+            timer.Start();
         }
 
-        private static void MoveToNextTile(HashSet<MapTile> path)
+        private void MoveToNextTile(HashSet<MapTile> path)
         {
-            var newTile = path.First();
-            foreach (var direction in MapCell.MapDirections.Keys)
-            {
-                var newPoint = new Point(Player.MapPosition.X + direction.X, Player.MapPosition.Y + direction.Y);
-                if (!CurrentMapCell.InBorders(newPoint) || !path.Contains(CurrentMapCell.Map[newPoint.X, newPoint.Y])) continue;
-                newTile = CurrentMapCell.Map[newPoint.X, newPoint.Y]; 
-                path.Remove(newTile);
-                Player.RotateTo(Player.DirectionsRotations[MapCell.MapDirections[direction]]);
-                break;
-            }
-            CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox.Controls.Remove(Player.SpriteBox);
-            newTile.SpriteBox.Controls.Add(Player.SpriteBox);
-            Player.MapPosition = newTile.MapPosition;
+            var (newTile, finalDirection) = CurrentMapCell.GetNextPlayerMove(path, Player.MapPosition);
+            if (newTile == null) throw new NullReferenceException();
+            Player.MoveToNextTileInPath(newTile, finalDirection);
+            gameForm.DrawPlayerInTile(CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox);
             if (path.Count == 0)
             {
-                _timer.Stop();
+                timer.Stop();
                 timerStarted = false;
             }
         }

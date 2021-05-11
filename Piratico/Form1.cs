@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace Piratico
@@ -6,6 +6,8 @@ namespace Piratico
     public partial class PiraticoGame : Form
     {
         private GameModel gameModel;
+
+        public void DrawMapCell() => Controls.Add(gameModel.CurrentMapCell.MapCellController);
 
         public PiraticoGame()
         {
@@ -16,13 +18,15 @@ namespace Piratico
 
         private void Init()
         {
-            gameModel = new GameModel(ClientSize);
-            Controls.Add(GameModel.CurrentMapCell.MapCellController);
+            gameModel = new GameModel(this);
+            DrawMapCell();
             GameTimer.Start();
         }
 
-        private void Update(object sender, EventArgs e)
+        public void DrawPlayerInTile(PictureBox newPlayerTile)
         {
+            gameModel.CurrentPlayerTile.SpriteBox.Controls.Remove(gameModel.Player.SpriteBox);
+            newPlayerTile.Controls.Add(gameModel.Player.SpriteBox);
         }
     }
 }

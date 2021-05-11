@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -23,7 +22,7 @@ namespace Piratico
             {Directions.Left, Rotations.Left}
         };
 
-        public Point MapPosition { get; set; }
+        public Point MapPosition { get; private set; }
         public readonly PictureBox SpriteBox;
         private Rotations currentRotation = Rotations.Down;
 
@@ -41,7 +40,7 @@ namespace Piratico
             };
         }
 
-        public void RotateTo(Rotations newRotation)
+        private void RotateTo(Rotations newRotation)
         {
             var delta = newRotation > currentRotation
                 ? 360 - (newRotation - currentRotation)
@@ -59,6 +58,12 @@ namespace Piratico
                     break;
             }
             currentRotation = newRotation;
+        }
+
+        public void MoveToNextTileInPath(MapTile newTile, Point direction)
+        {
+            RotateTo(DirectionsRotations[MapCell.MapDirections[direction]]);
+            MapPosition = newTile.MapPosition;
         }
     }
 }

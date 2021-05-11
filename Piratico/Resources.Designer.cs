@@ -63,16 +63,6 @@ namespace Piratico {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BoundedSeaTile {
-            get {
-                object obj = ResourceManager.GetObject("BoundedSeaTile", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ChosenSeaTile {
             get {
                 object obj = ResourceManager.GetObject("ChosenSeaTile", resourceCulture);
@@ -86,6 +76,16 @@ namespace Piratico {
         internal static System.Drawing.Bitmap PlayerShip {
             get {
                 object obj = ResourceManager.GetObject("PlayerShip", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SimpleIsland {
+            get {
+                object obj = ResourceManager.GetObject("SimpleIsland", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -6,35 +6,40 @@ namespace Piratico
     public enum MapTileType
     {
         Sea,
+        Shallow,
         Island
     }
 
     class MapTile
     {
-        private readonly Image seaTile = Resources.SimpleSeaTile;
-        private readonly Image chosenSeaTile = Resources.ChosenSeaTile;
+        private readonly Image originalTile = Resources.SimpleSeaTile;
+        private readonly Image chosenTile = Resources.ChosenSeaTile;
         public readonly MapTileType TileType;
         public readonly PictureBox SpriteBox;
 
         public readonly Point MapPosition;
         public readonly int Index;
 
-        public MapTile(Point mapPosition, int index)
+        public MapTile(Point mapPosition, int index, GameModel gameModel, MapTileType tileType, Image sprite)
         {
             Index = index;
             MapPosition = mapPosition;
-            TileType = MapTileType.Sea;
+            TileType = tileType;
+            originalTile = sprite ?? Resources.SimpleSeaTile;
             SpriteBox = new PictureBox
             {
-                Image = seaTile,
+                Image = originalTile,
                 Size = new Size(GameModel.TileSize, GameModel.TileSize),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 ForeColor = Color.Transparent,
                 BackColor = Color.Transparent
             };
-            SpriteBox.MouseEnter += (sender, args) => SpriteBox.Image = chosenSeaTile;
-            SpriteBox.MouseLeave += (sender, args) => SpriteBox.Image = seaTile;
-            SpriteBox.MouseDoubleClick += (sender, args) => GameModel.MovePlayerToNewTile(this);
+            if(TileType != MapTileType.Island)
+            {
+                SpriteBox.MouseEnter += (sender, args) => SpriteBox.Image = chosenTile;
+                SpriteBox.MouseLeave += (sender, args) => SpriteBox.Image = originalTile;
+                SpriteBox.MouseDoubleClick += (sender, args) => gameModel.MovePlayerToNewTile(this);
+            }
         }
     }
 }

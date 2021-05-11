@@ -53,6 +53,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GameModel.cs" />
+    <Compile Include="IslandsGenerator.cs" />
     <Compile Include="MapCell.cs" />
     <Compile Include="MapTile.cs" />
     <Compile Include="Player.cs" />
@@ -94,25 +95,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Sea.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ship %282%29.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\PlayerShip.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SeaTile.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\tile_73.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\BoudedSeaTile.png" />
+    <None Include="Resources\SimpleIsland.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ChosenSeaTile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SimpleSeaTile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
