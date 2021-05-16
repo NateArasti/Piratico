@@ -10,9 +10,8 @@ namespace Piratico
         Island
     }
 
-    class MapTile
+    public class MapTile
     {
-        private readonly Image originalTile = Resources.SimpleSeaTile;
         private readonly Image chosenTile = Resources.ChosenSeaTile;
         public readonly MapTileType TileType;
         public readonly PictureBox SpriteBox;
@@ -20,12 +19,14 @@ namespace Piratico
         public readonly Point MapPosition;
         public readonly int Index;
 
+        public bool HasShipOnTile { get; set; }
+
         public MapTile(Point mapPosition, int index, GameModel gameModel, MapTileType tileType, Image sprite)
         {
             Index = index;
             MapPosition = mapPosition;
             TileType = tileType;
-            originalTile = sprite ?? Resources.SimpleSeaTile;
+            var originalTile = sprite ?? Resources.SimpleSeaTile;
             SpriteBox = new PictureBox
             {
                 Image = originalTile,
@@ -34,6 +35,7 @@ namespace Piratico
                 ForeColor = Color.Transparent,
                 BackColor = Color.Transparent
             };
+
             if(TileType != MapTileType.Island)
             {
                 SpriteBox.MouseEnter += (sender, args) => SpriteBox.Image = chosenTile;

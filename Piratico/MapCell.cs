@@ -1,38 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Piratico
 {
-    public enum Directions
+    public enum Direction
     {
+        None,
         Up,
         Down,
         Right,
         Left
     }
 
-    internal class MapCell
+    public class MapCell
     {
         private readonly GameModel gameModel;
+
+        public List<Enemy> Enemies { get; } = new List<Enemy>();
 
         public static readonly Size MapSize = new Size(20, 15);
         public readonly int DeltaFromBorders;
 
-        public static IReadOnlyDictionary<Point, Directions> MapDirections = new Dictionary<Point, Directions>
+        public static IReadOnlyDictionary<Point, Direction> MapDirections = new Dictionary<Point, Direction>
         {
-            {new Point(0, 1), Directions.Down},
-            {new Point(0, -1), Directions.Up},
-            {new Point(1, 0), Directions.Right},
-            {new Point(-1, 0), Directions.Left}
+            {new Point(0, 1), Direction.Down},
+            {new Point(0, -1), Direction.Up},
+            {new Point(1, 0), Direction.Right},
+            {new Point(-1, 0), Direction.Left}
         };
 
-        private readonly Dictionary<Directions, MapCell> neighbors;
+        private readonly Dictionary<Direction, MapCell> neighbors;
 
         public readonly MapTile[,] Map = new MapTile[MapSize.Width, MapSize.Height];
 
-        private readonly Tuple<int, MapTile>[,] paths = new Tuple<int, MapTile>[MapSize.Width * MapSize.Height, MapSize.Width * MapSize.Height];
+        private readonly int[,] paths = new int[MapSize.Width * MapSize.Height, MapSize.Width * MapSize.Height];
         private readonly List<Point> allSeaTiles = new List<Point>();
 
         public readonly Panel MapCellController;
@@ -47,32 +51,35 @@ namespace Piratico
                 Dock = DockStyle.Fill,
                 ForeColor = Color.Transparent
             };
-            neighbors = new Dictionary<Directions, MapCell>
+            neighbors = new Dictionary<Direction, MapCell>
             {
-                {Directions.Down, null},
-                {Directions.Up, null},
-                {Directions.Left, null},
-                {Directions.Right, null}
+                {Direction.None, this},
+                {Direction.Down, null},
+                {Direction.Up, null},
+                {Direction.Left, null},
+                {Direction.Right, null}
             };
             GenerateMap();
         }
 
-        private MapCell(Directions direction, MapCell neighbor) : this(neighbor.gameModel)
+        private MapCell(Direction direction, MapCell neighbor) : this(neighbor.gameModel)
         {
             switch (direction)
             {
-                case Directions.Down:
-                    neighbors[Directions.Up] = neighbor;
+                case Direction.Down:
+                    neighbors[Direction.Up] = neighbor;
                     break;
-                case Directions.Up:
-                    neighbors[Directions.Down] = neighbor;
+                case Direction.Up:
+                    neighbors[Direction.Down] = neighbor;
                     break;
-                case Directions.Left:
-                    neighbors[Directions.Right] = neighbor;
+                case Direction.Left:
+                    neighbors[Direction.Right] = neighbor;
                     break;
-                case Directions.Right:
-                    neighbors[Directions.Left] = neighbor;
+                case Direction.Right:
+                    neighbors[Direction.Left] = neighbor;
                     break;
+                case Direction.None:
+                    throw new ArgumentException();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
@@ -80,13 +87,15 @@ namespace Piratico
 
         public void GenerateNeighbors()
         {
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < 5; i++)
             {
-                var direction = (Directions) i;
+                var direction = (Direction) i;
                 if (neighbors[direction] == null)
                     neighbors[direction] = new MapCell(direction, this);
             }
         }
+
+        public MapCell GetNeighbor(Direction direction) => neighbors[direction];
 
         private void GenerateMap()
         {
@@ -104,15 +113,40 @@ namespace Piratico
                         allSeaTiles.Add(point);
                         Map[i, j] = new MapTile(point, allSeaTiles.Count - 1, gameModel, islandsMap[i, j].Item1, islandsMap[i, j].Item2);
                         break;
-                    default:
+                    case MapTileType.Sea:
                         allSeaTiles.Add(point);
                         Map[i, j] = new MapTile(point, allSeaTiles.Count - 1, gameModel, MapTileType.Sea, null);
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
                 Map[i, j].SpriteBox.Location = new Point(DeltaFromBorders + i * GameModel.TileSize, j * GameModel.TileSize);
                 MapCellController.Controls.Add(Map[i, j].SpriteBox);
             }
+
+            Map[Player.PlayerStartPosition.X, Player.PlayerStartPosition.Y].HasShipOnTile = true;
+            SpawnEnemies();
             GetPathsBetweenTiles();
+        }
+
+        private void SpawnEnemies()
+        {
+            var random = new Random();
+            var enemyCount = random.Next(5);
+            do
+            {
+                var mapPosition = new Point(random.Next(Map.GetLength(0)), random.Next(Map.GetLength(1)));
+                if (Map[mapPosition.X, mapPosition.Y].TileType != MapTileType.Sea) continue;
+                enemyCount -= 1;
+                Enemies.Add(
+                    new Enemy(Resources.EnemyShip,
+                        new Size(GameModel.TileSize, GameModel.TileSize),
+                        mapPosition,
+                        Map[mapPosition.X, mapPosition.Y].SpriteBox,
+                        gameModel)
+                );
+                Map[mapPosition.X, mapPosition.Y].HasShipOnTile = true;
+            } while (enemyCount > 0);
         }
 
         private void GetPathsBetweenTiles()
@@ -122,55 +156,55 @@ namespace Piratico
             for (var i = 0; i < length; i++)
             for (var j = i; j < length; j++)
             {
-                if (i == j) paths[i, j] = Tuple.Create(0, Map[allSeaTiles[i].X, allSeaTiles[i].Y]);
+                if (i == j) paths[i, j] = 0;
                 else if (MapDirections.ContainsKey(new Point(allSeaTiles[i].X - allSeaTiles[j].X,
                     allSeaTiles[i].Y - allSeaTiles[j].Y)))
                 {
-                    paths[i, j] = Tuple.Create(1, Map[allSeaTiles[i].X, allSeaTiles[i].Y]);
-                    paths[j, i] = Tuple.Create(1, Map[allSeaTiles[j].X, allSeaTiles[j].Y]);
+                    paths[i, j] = 1;
+                    paths[j, i] = 1;
                 }
                 else
                 {
-                    paths[i, j] = Tuple.Create(infinite, Map[allSeaTiles[j].X, allSeaTiles[j].Y]);
-                    paths[j, i] = Tuple.Create(infinite, Map[allSeaTiles[i].X, allSeaTiles[i].Y]);
+                    paths[i, j] = infinite;
+                    paths[j, i] = infinite;
                 }
             }
             for (var k = 0; k < length; ++k)
             for (var i = 0; i < length; ++i)
             for (var j = 0; j < length; ++j)
             {
-                if (paths[i, k].Item1 < infinite && paths[k, j].Item1 < infinite &&
-                    paths[i, j].Item1 > paths[i, k].Item1 + paths[k, j].Item1)
-                    paths[i, j] = Tuple.Create(paths[i, k].Item1 + paths[k, j].Item1,
-                        Map[allSeaTiles[k].X, allSeaTiles[k].Y]);
+                if (paths[i, k] < infinite && paths[k, j] < infinite &&
+                    paths[i, j] > paths[i, k] + paths[k, j])
+                    paths[i, j] = paths[i, k] + paths[k, j];
             }
         }
 
-        public void FillPathBetweenMapTiles(HashSet<MapTile> path, MapTile start, MapTile finish)
+        public (MapTile newTile, Point finalDirection) GetNextShipMove(Point shipMapPosition, Point finishMapPosition)
         {
-            if(paths[start.Index, finish.Index].Item2 != start)
+            var currentTile = Map[shipMapPosition.X, shipMapPosition.Y];
+            var finish = Map[finishMapPosition.X, finishMapPosition.Y];
+            (MapTile newTile, var finalDirection) = (null, new Point());
+            var minPathLength = paths[currentTile.Index, finish.Index];
+            foreach (var direction in MapDirections.Keys)
             {
-                FillPathBetweenMapTiles(path, paths[start.Index, finish.Index].Item2, finish);
-                FillPathBetweenMapTiles(path, start, paths[start.Index, finish.Index].Item2);
-                path.Add(paths[start.Index, finish.Index].Item2);
-            }
-        }
-
-        public (MapTile newTile, Point finalDirection) GetNextPlayerMove(HashSet<MapTile> path, Point playerMapPosition)
-        {
-            (MapTile newTile, Point finalDirection) = (null, new Point());
-            foreach (var direction in MapCell.MapDirections.Keys)
-            {
-                var newPoint = new Point(playerMapPosition.X + direction.X, playerMapPosition.Y + direction.Y);
-                if (!InBorders(newPoint) || !path.Contains(Map[newPoint.X, newPoint.Y])) continue;
+                var newPoint = new Point(shipMapPosition.X + direction.X, shipMapPosition.Y + direction.Y);
+                if (!InBorders(newPoint) || 
+                    Map[newPoint.X, newPoint.Y].TileType == MapTileType.Island ||
+                    paths[Map[newPoint.X, newPoint.Y].Index, finish.Index] > minPathLength) continue;
+                minPathLength = paths[currentTile.Index, finish.Index];
                 newTile = Map[newPoint.X, newPoint.Y];
-                path.Remove(newTile);
                 finalDirection = direction;
-                break;
             }
 
             return (newTile, finalDirection);
         }
+
+        public IEnumerable<MapTile> GetNeighborTiles(Point mapPosition) =>
+            from direction in MapDirections.Keys 
+                select new Point(mapPosition.X + direction.X, mapPosition.Y + direction.Y) 
+                into newPoint 
+                where InBorders(newPoint) && Map[newPoint.X, newPoint.Y].TileType != MapTileType.Island 
+                select Map[newPoint.X, newPoint.Y];
 
         private static bool InBorders(Point point) => point.X >= 0 && point.X < MapSize.Width && point.Y >= 0 && point.Y < MapSize.Height;
     }

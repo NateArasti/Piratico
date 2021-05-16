@@ -39,7 +39,7 @@ namespace Piratico
             for (var j = 0; j < resultMap.GetLength(1); j++)
                 resultMap[i, j] = (MapTileType.Sea, null);
 
-            const int percentDelta = 20;
+            const int percentDelta = 30;
             for (var chanceOfGeneration = 95; chanceOfGeneration > 0; chanceOfGeneration -= percentDelta)
             {
                 if (Random.Next(101) >= chanceOfGeneration) break;
@@ -70,7 +70,9 @@ namespace Piratico
             var island = Islands[islandIndex].tileTypes;
             var width = island.GetLength(0);
             var height = island.GetLength(1);
-            if (spot.X + width >= currentMap.GetLength(0) || spot.Y + height >= currentMap.GetLength(1)) return false;
+            if (spot.X + width >= currentMap.GetLength(0) || spot.Y + height >= currentMap.GetLength(1) ||
+                spot.X <= Player.PlayerStartPosition.X && Player.PlayerStartPosition.X < spot.X + width ||
+                spot.Y <= Player.PlayerStartPosition.Y && Player.PlayerStartPosition.Y < spot.Y + height) return false;
             for (var i = 0; i < width; i++)
             for (var j = 0; j < height; j++)
                 if (currentMap[spot.X + i, spot.Y + j].tileType != MapTileType.Sea && 

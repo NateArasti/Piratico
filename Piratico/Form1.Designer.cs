@@ -29,19 +29,76 @@ namespace Piratico
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.GameTimer = new System.Windows.Forms.Timer(this.components);
+            this.Scout = new System.Windows.Forms.Button();
+            this.Up = new System.Windows.Forms.Button();
+            this.Left = new System.Windows.Forms.Button();
+            this.Right = new System.Windows.Forms.Button();
+            this.Down = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // GameTimer
+            // Scout
             // 
-            this.GameTimer.Interval = 25;
+            this.Scout.Location = new System.Drawing.Point(12, 193);
+            this.Scout.Name = "Scout";
+            this.Scout.Size = new System.Drawing.Size(123, 42);
+            this.Scout.TabIndex = 0;
+            this.Scout.Text = "scout";
+            this.Scout.UseVisualStyleBackColor = true;
+            // 
+            // Up
+            // 
+            this.Up.AutoEllipsis = true;
+            this.Up.Location = new System.Drawing.Point(51, 241);
+            this.Up.Name = "Up";
+            this.Up.Size = new System.Drawing.Size(40, 39);
+            this.Up.TabIndex = 1;
+            this.Up.Text = "Up";
+            this.Up.UseVisualStyleBackColor = true;
+            this.Up.Visible = false;
+            // 
+            // Left
+            // 
+            this.Left.AutoEllipsis = true;
+            this.Left.Location = new System.Drawing.Point(11, 286);
+            this.Left.Name = "Left";
+            this.Left.Size = new System.Drawing.Size(40, 39);
+            this.Left.TabIndex = 2;
+            this.Left.Text = "Left";
+            this.Left.UseVisualStyleBackColor = true;
+            this.Left.Visible = false;
+            // 
+            // Right
+            // 
+            this.Right.AutoEllipsis = true;
+            this.Right.Location = new System.Drawing.Point(92, 286);
+            this.Right.Name = "Right";
+            this.Right.Size = new System.Drawing.Size(40, 39);
+            this.Right.TabIndex = 3;
+            this.Right.Text = "Right";
+            this.Right.UseVisualStyleBackColor = true;
+            this.Right.Visible = false;
+            // 
+            // Down
+            // 
+            this.Down.AutoEllipsis = true;
+            this.Down.Location = new System.Drawing.Point(51, 331);
+            this.Down.Name = "Down";
+            this.Down.Size = new System.Drawing.Size(40, 39);
+            this.Down.TabIndex = 4;
+            this.Down.Text = "Down";
+            this.Down.UseVisualStyleBackColor = true;
+            this.Down.Visible = false;
             // 
             // PiraticoGame
             // 
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1280, 720);
+            this.Controls.Add(this.Down);
+            this.Controls.Add(this.Right);
+            this.Controls.Add(this.Left);
+            this.Controls.Add(this.Up);
+            this.Controls.Add(this.Scout);
             this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Perpetua Titling MT", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -55,8 +112,11 @@ namespace Piratico
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer GameTimer;
+        private System.Windows.Forms.Button Scout;
+        private System.Windows.Forms.Button Up;
+        private System.Windows.Forms.Button Left;
+        private System.Windows.Forms.Button Right;
+        private System.Windows.Forms.Button Down;
     }
 }
 

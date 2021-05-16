@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace Piratico
 {
-    class GameModel
+    public class GameModel
     {
         private readonly PiraticoGame gameForm;
 
@@ -15,7 +12,6 @@ namespace Piratico
 
         public MapCell CurrentMapCell { get; private set; }
         public Player Player { get; }
-        public MapTile CurrentPlayerTile => CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y];
         public static int TileSize { get; private set; } = 64;
         public static int Width { get; private set; } = 1280;
 
@@ -26,37 +22,57 @@ namespace Piratico
             Width = gameForm.ClientSize.Width;
             CurrentMapCell = new MapCell(this);
             CurrentMapCell.GenerateNeighbors();
-            Player = new Player(Resources.PlayerShip, new Point(0, 0), new Size(TileSize, TileSize), new Point(10, 10));
-            CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox.Controls.Add(Player.SpriteBox);
+            Player = new Player(
+                Resources.PlayerShip,
+                new Size(TileSize, TileSize),
+                CurrentMapCell.Map[Player.PlayerStartPosition.X, Player.PlayerStartPosition.Y].SpriteBox,
+                this);
+        }
+
+        public void SwitchToMapCell(Direction direction)
+        {
+            var newMapCell = CurrentMapCell.GetNeighbor(direction);
+            if(newMapCell == null) return;
+            gameForm.DrawMapCell(newMapCell.MapCellController);
+            CurrentMapCell = newMapCell;
         }
 
         public void MovePlayerToNewTile(MapTile newMapTile)
         {
             if(timerStarted) return;
             timerStarted = true;
-
-            var path = new HashSet<MapTile>();
-            CurrentMapCell.FillPathBetweenMapTiles(path,
-                CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y], 
-                newMapTile);
-            path.Add(newMapTile);
-
             timer = new Timer {Interval = 200};
-            timer.Tick += (sender, args) => MoveToNextTile(path);
+            timer.Tick += (sender, args) => MoveShipToNextTile(Player, newMapTile);
+            timer.Tick += (sender, args) => LetEnemiesToDoTheirMove();
             timer.Start();
         }
 
-        private void MoveToNextTile(HashSet<MapTile> path)
+        public void MoveShipToNextTile(Ship ship, MapTile newMapTile)
         {
-            var (newTile, finalDirection) = CurrentMapCell.GetNextPlayerMove(path, Player.MapPosition);
-            if (newTile == null) throw new NullReferenceException();
-            Player.MoveToNextTileInPath(newTile, finalDirection);
-            gameForm.DrawPlayerInTile(CurrentMapCell.Map[Player.MapPosition.X, Player.MapPosition.Y].SpriteBox);
-            if (path.Count == 0)
+            var (newTile, finalDirection) = CurrentMapCell.GetNextShipMove(ship.MapPosition, newMapTile.MapPosition);
+            if (newTile == null) return;
+            newTile.HasShipOnTile = true;
+            CurrentMapCell.Map[ship.MapPosition.X, ship.MapPosition.Y].HasShipOnTile = false;
+            ship.MoveToNextTile(newTile, finalDirection);
+            gameForm.DrawShipInTile(ship, CurrentMapCell.Map[ship.MapPosition.X, ship.MapPosition.Y].SpriteBox);
+            if (ship.MapPosition != newMapTile.MapPosition) return;
+            timer.Stop();
+            timerStarted = false;
+        }
+
+        private void LetEnemiesToDoTheirMove()
+        {
+            foreach (var enemy in CurrentMapCell.Enemies) enemy.ChooseAndExecuteBestAction();
+        }
+
+        public void DeleteShip(Ship ship)
+        {
+            if (Player.Equals(ship))
             {
-                timer.Stop();
-                timerStarted = false;
+                Application.Restart();
             }
+            else
+                gameForm.DeleteShip(ship);
         }
     }
 }
