@@ -9,8 +9,10 @@ namespace Piratico
         private static readonly (Bitmap bigSprite, MapTileType[,] tileTypes, Image[,] tileSprites)[] Islands = 
         {
             (
+                //Размеры массивов указаны для удобства
+                // ReSharper disable RedundantExplicitArraySize
                 Resources.SimpleIsland, 
-                    new MapTileType[5, 5]
+                new MapTileType[5, 5]
                 {
                     {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
                     {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},

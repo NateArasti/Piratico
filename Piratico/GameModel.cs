@@ -6,18 +6,21 @@ namespace Piratico
     public class GameModel
     {
         private readonly PiraticoGame gameForm;
+        private readonly ScoutMode scoutMode;
 
         private Timer timer = new Timer();
         private bool timerStarted;
 
+        public bool IsScouting => scoutMode.IsScouting;
         public MapCell CurrentMapCell { get; private set; }
         public Player Player { get; }
         public static int TileSize { get; private set; } = 64;
         public static int Width { get; private set; } = 1280;
 
-        public GameModel(PiraticoGame gameForm)
+        public GameModel(PiraticoGame gameForm, ScoutData scoutData)
         {
             this.gameForm = gameForm;
+            scoutMode = new ScoutMode(scoutData, this);
             TileSize = gameForm.ClientSize.Height / MapCell.MapSize.Height;
             Width = gameForm.ClientSize.Width;
             CurrentMapCell = new MapCell(this);
@@ -25,7 +28,7 @@ namespace Piratico
             Player = new Player(
                 Resources.PlayerShip,
                 new Size(TileSize, TileSize),
-                CurrentMapCell.Map[Player.PlayerStartPosition.X, Player.PlayerStartPosition.Y].SpriteBox,
+                CurrentMapCell.GetMapTile(Player.PlayerStartPosition).SpriteBox,
                 this);
         }
 
@@ -33,8 +36,13 @@ namespace Piratico
         {
             var newMapCell = CurrentMapCell.GetNeighbor(direction);
             if(newMapCell == null) return;
-            gameForm.DrawMapCell(newMapCell.MapCellController);
+            gameForm.DrawMapCell(newMapCell.MapCellControlPanel);
             CurrentMapCell = newMapCell;
+        }
+
+        public void MoveToNewMapCell()
+        {
+
         }
 
         public void MovePlayerToNewTile(MapTile newMapTile)
@@ -43,7 +51,7 @@ namespace Piratico
             timerStarted = true;
             timer = new Timer {Interval = 200};
             timer.Tick += (sender, args) => MoveShipToNextTile(Player, newMapTile);
-            timer.Tick += (sender, args) => LetEnemiesToDoTheirMove();
+            timer.Tick += (sender, args) => LetEnemiesDoTheirMove();
             timer.Start();
         }
 
@@ -52,15 +60,15 @@ namespace Piratico
             var (newTile, finalDirection) = CurrentMapCell.GetNextShipMove(ship.MapPosition, newMapTile.MapPosition);
             if (newTile == null) return;
             newTile.HasShipOnTile = true;
-            CurrentMapCell.Map[ship.MapPosition.X, ship.MapPosition.Y].HasShipOnTile = false;
+            CurrentMapCell.GetMapTile(ship.MapPosition).HasShipOnTile = false;
             ship.MoveToNextTile(newTile, finalDirection);
-            gameForm.DrawShipInTile(ship, CurrentMapCell.Map[ship.MapPosition.X, ship.MapPosition.Y].SpriteBox);
+            gameForm.DrawShipInTile(ship, CurrentMapCell.GetMapTile(ship.MapPosition).SpriteBox);
             if (ship.MapPosition != newMapTile.MapPosition) return;
             timer.Stop();
             timerStarted = false;
         }
 
-        private void LetEnemiesToDoTheirMove()
+        private void LetEnemiesDoTheirMove()
         {
             foreach (var enemy in CurrentMapCell.Enemies) enemy.ChooseAndExecuteBestAction();
         }

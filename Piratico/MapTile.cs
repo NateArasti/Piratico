@@ -40,7 +40,13 @@ namespace Piratico
             {
                 SpriteBox.MouseEnter += (sender, args) => SpriteBox.Image = chosenTile;
                 SpriteBox.MouseLeave += (sender, args) => SpriteBox.Image = originalTile;
-                SpriteBox.MouseDoubleClick += (sender, args) => gameModel.MovePlayerToNewTile(this);
+                SpriteBox.MouseDoubleClick += (sender, args) =>
+                {
+                    if (gameModel.IsScouting)
+                        gameModel.MoveToNewMapCell();
+                    else
+                        gameModel.MovePlayerToNewTile(this);
+                };
             }
         }
     }
