@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Piratico
@@ -6,21 +7,19 @@ namespace Piratico
     public class GameModel
     {
         private readonly PiraticoGame gameForm;
-        private readonly ScoutMode scoutMode;
 
         private Timer timer = new Timer();
         private bool timerStarted;
 
-        public bool IsScouting => scoutMode.IsScouting;
+        public bool OnNewMapCell => gameForm.ScoutMode.OnNewMapCell;
         public MapCell CurrentMapCell { get; private set; }
         public Player Player { get; }
         public static int TileSize { get; private set; } = 64;
         public static int Width { get; private set; } = 1280;
 
-        public GameModel(PiraticoGame gameForm, ScoutData scoutData)
+        public GameModel(PiraticoGame gameForm)
         {
             this.gameForm = gameForm;
-            scoutMode = new ScoutMode(scoutData, this);
             TileSize = gameForm.ClientSize.Height / MapCell.MapSize.Height;
             Width = gameForm.ClientSize.Width;
             CurrentMapCell = new MapCell(this);
@@ -40,32 +39,68 @@ namespace Piratico
             CurrentMapCell = newMapCell;
         }
 
-        public void MoveToNewMapCell()
+        public void MoveToNewMapCell(MapTile endTile)
         {
+            var direction = gameForm.ScoutMode.LastScoutDirection;
+            var newMapCell = CurrentMapCell;
+            SwitchToMapCell((Direction)(-(int)direction));
+            var originMapCell = CurrentMapCell;
+            var (originBorderPoint, newBorderPoint) = TileMap.GetMinPathBetweenMapCells(
+                originMapCell, 
+                newMapCell, 
+                gameForm.ScoutMode.LastScoutDirection,
+                Player.CurrentMapTile, 
+                endTile);
+            gameForm.ScoutMode.ExitScoutModeManually();
+            newMapCell.GenerateNeighbors();
+            var partOfPathIsDone = false;
+            bool PlayerSteps()
+            {
+                if (!partOfPathIsDone)
+                {
+                    partOfPathIsDone = MoveShipToNextTile(Player, originMapCell.GetMapTile(originBorderPoint));
+                    return false;
+                }
+                if (CurrentMapCell != newMapCell)
+                {
+                    SwitchToMapCell(direction);
+                    Player.MoveToNextTile(newMapCell.GetMapTile(newBorderPoint));
+                    gameForm.DrawShipInTile(Player, newMapCell.GetMapTile(newBorderPoint).SpriteBox);
+                }
+                else
+                    return MoveShipToNextTile(Player, endTile);
 
+                return false;
+            }
+
+            StartTimer(PlayerSteps);
         }
 
-        public void MovePlayerToNewTile(MapTile newMapTile)
+        public void StartTimer(Func<bool> playerSteps)
         {
             if(timerStarted) return;
             timerStarted = true;
             timer = new Timer {Interval = 200};
-            timer.Tick += (sender, args) => MoveShipToNextTile(Player, newMapTile);
+            timer.Tick += (sender, args) =>
+            {
+                if (!playerSteps()) return;
+                timer.Stop();
+                timerStarted = false;
+            };
             timer.Tick += (sender, args) => LetEnemiesDoTheirMove();
             timer.Start();
         }
 
-        public void MoveShipToNextTile(Ship ship, MapTile newMapTile)
+        public bool MoveShipToNextTile(Ship ship, MapTile newMapTile)
         {
+            if (ship.CurrentMapTile == newMapTile) return true;
             var (newTile, finalDirection) = CurrentMapCell.GetNextShipMove(ship.MapPosition, newMapTile.MapPosition);
-            if (newTile == null) return;
+            if (newTile == null) return true;
             newTile.HasShipOnTile = true;
             CurrentMapCell.GetMapTile(ship.MapPosition).HasShipOnTile = false;
             ship.MoveToNextTile(newTile, finalDirection);
             gameForm.DrawShipInTile(ship, CurrentMapCell.GetMapTile(ship.MapPosition).SpriteBox);
-            if (ship.MapPosition != newMapTile.MapPosition) return;
-            timer.Stop();
-            timerStarted = false;
+            return ship.CurrentMapTile == newMapTile;
         }
 
         private void LetEnemiesDoTheirMove()

@@ -7,7 +7,7 @@ namespace Piratico
 {
     public class MapCell
     {
-        public static Size MapSize = new Size(20, 15); 
+        public static Size MapSize = new Size(20, 15);
 
         private readonly GameModel gameModel;
         private readonly Dictionary<Direction, MapCell> neighbors;
@@ -26,7 +26,8 @@ namespace Piratico
                 Dock = DockStyle.Fill,
                 ForeColor = Color.Transparent
             };
-            tileMap = new TileMap(deltaFromBorders, gameModel, MapCellControlPanel, Enemies);
+            tileMap = new TileMap(deltaFromBorders, gameModel, MapCellControlPanel);
+            SpawnEnemies();
             neighbors = new Dictionary<Direction, MapCell>
             {
                 {Direction.None, this},
@@ -60,6 +61,28 @@ namespace Piratico
             }
         }
 
+        private void SpawnEnemies()
+        {
+            var random = new Random();
+            var enemyCount = random.Next(3);
+            do
+            {
+                var mapPosition = new Point(random.Next(MapSize.Width), random.Next(MapSize.Height));
+                var mapTile = GetMapTile(mapPosition);
+                if (mapTile.TileType != MapTileType.Sea ||
+                    mapTile.HasShipOnTile) continue;
+                enemyCount -= 1;
+                Enemies.Add(
+                    new Enemy(Resources.EnemyShip,
+                        new Size(GameModel.TileSize, GameModel.TileSize),
+                        mapPosition,
+                        mapTile.SpriteBox,
+                        gameModel)
+                );
+                mapTile.HasShipOnTile = true;
+            } while (enemyCount > 0);
+        }
+
         public void GenerateNeighbors()
         {
             foreach (var value in Enum.GetValues(typeof(Direction)))
@@ -79,5 +102,8 @@ namespace Piratico
         public IEnumerable<MapTile> GetNeighborTiles(Point mapPosition) => tileMap.GetNeighborTiles(mapPosition);
 
         public MapTile GetMapTile(Point mapPosition) => tileMap.GetMapTile(mapPosition);
+
+        public int GetPathLengthToTile(MapTile startMapTile, MapTile endMapTile) =>
+            tileMap.GetPathLengthToTile(startMapTile, endMapTile);
     }
 }

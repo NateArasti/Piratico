@@ -5,23 +5,13 @@ namespace Piratico
 {
     public partial class PiraticoGame : Form
     {
-        private GameModel gameModel;
+        private readonly GameModel gameModel;
+        public readonly ScoutMode ScoutMode;
 
         public PiraticoGame()
         {
             InitializeComponent();
-            Init();
-            Invalidate();
-        }
-
-        public void DrawMapCell(Panel newMapCell)
-        {
-            Controls.Remove(gameModel.CurrentMapCell.MapCellControlPanel);
-            Controls.Add(newMapCell);
-        }
-
-        private void Init()
-        {
+            gameModel = new GameModel(this);
             var scoutButtons = new Dictionary<Direction, Button>
             {
                 [Direction.Up] = Up,
@@ -29,8 +19,15 @@ namespace Piratico
                 [Direction.Left] = Left,
                 [Direction.Right] = Right
             };
-            gameModel = new GameModel(this, new ScoutData(Scout, scoutButtons));
+            ScoutMode = new ScoutMode(new ScoutData(Scout, scoutButtons), gameModel);
             DrawMapCell(gameModel.CurrentMapCell.MapCellControlPanel);
+            Invalidate();
+        }
+
+        public void DrawMapCell(Panel newMapCell)
+        {
+            Controls.Remove(gameModel.CurrentMapCell.MapCellControlPanel);
+            Controls.Add(newMapCell);
         }
 
         public void DrawShipInTile(Ship ship, PictureBox newPlayerTile)

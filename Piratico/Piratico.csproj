@@ -69,7 +69,6 @@
     <Compile Include="ScoutMode.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="TileMap.cs" />
-    <Compile Include="Vector.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
