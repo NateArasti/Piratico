@@ -40,15 +40,15 @@ namespace Piratico
             for (var j = 0; j < MapSize.Height; j++)
             {
                 var point = new Point(i, j);
-                switch (islandsMap[i, j].Item1)
+                switch (islandsMap[i, j].tileType)
                 {
                     case MapTileType.Island:
-                        Map[i, j] = new MapTile(point, -1, gameModel, islandsMap[i, j].Item1, islandsMap[i, j].Item2);
+                        Map[i, j] = new MapTile(point, -1, gameModel, islandsMap[i, j].tileType, islandsMap[i, j].tileSprite);
                         break;
                     case MapTileType.Shallow:
                         allSeaTiles.Add(point);
-                        Map[i, j] = new MapTile(point, allSeaTiles.Count - 1, gameModel, islandsMap[i, j].Item1,
-                            islandsMap[i, j].Item2);
+                        Map[i, j] = new MapTile(point, allSeaTiles.Count - 1, gameModel, islandsMap[i, j].tileType,
+                            islandsMap[i, j].tileSprite);
                         break;
                     case MapTileType.Sea:
                         allSeaTiles.Add(point);
@@ -63,7 +63,7 @@ namespace Piratico
                 mapCellControlPanel.Controls.Add(Map[i, j].SpriteBox);
             }
 
-            Map[Player.PlayerStartPosition.X, Player.PlayerStartPosition.Y].HasShipOnTile = true;
+            GetMapTile(Player.PlayerStartPosition).HasShipOnTile = true;
         }
 
         private void GetPathsBetweenTiles()
@@ -101,8 +101,8 @@ namespace Piratico
             var currentTile = Map[shipMapPosition.X, shipMapPosition.Y];
             var finish = Map[finishMapPosition.X, finishMapPosition.Y];
             (MapTile newTile, var finalDirection) = (null, new Point());
-            var minPathLength = paths[currentTile.Index, finish.Index];
-            foreach (var direction in MapDirections.Keys)
+            var minPathLength = int.MaxValue;
+            foreach (var direction in MapDirections.Keys.Skip(1))
             {
                 var newPoint = new Point(shipMapPosition.X + direction.X, shipMapPosition.Y + direction.Y);
                 if (!InBorders(newPoint) ||
@@ -174,6 +174,32 @@ namespace Piratico
                     return (new Point(0, 0), new Point(MapSize.Width - 1, 0), new Size(0, 1));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+        public IEnumerable<MapTile> GetHorizontalAndVerticalSeaTiles(Point startPosition)
+        {
+            var checks = new Dictionary<Direction, bool>
+            {
+                [Direction.Up] = false,
+                [Direction.Down] = false,
+                [Direction.Right] = false,
+                [Direction.Left] = false,
+            };
+            for (var i = 1; ; i++)
+            {
+                if(checks.All(pair => pair.Value)) yield break;
+                foreach (var point in MapDirections.Skip(1))
+                {
+                    if(checks[point.Value]) continue;
+                    var newPoint = startPosition + new Size(point.Key.X * i, point.Key.Y * i);
+                    if (!InBorders(newPoint) || GetMapTile(newPoint).TileType == MapTileType.Island)
+                    {
+                        checks[point.Value] = true;
+                        continue;
+                    }
+                    yield return GetMapTile(newPoint);
+                }
             }
         }
     }

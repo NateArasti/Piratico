@@ -1,17 +1,16 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace Piratico
 {
     public class GameModel
     {
+        public bool PlayerDoingSomething => Player.IsMoving || Player.IsShooting; 
+
         private readonly PiraticoGame gameForm;
 
-        private Timer timer = new Timer();
-        private bool timerStarted;
-
         public bool OnNewMapCell => gameForm.ScoutMode.OnNewMapCell;
+        public bool IsInShootMode => gameForm.ShootMode.IsInShootMode;
         public MapCell CurrentMapCell { get; private set; }
         public Player Player { get; }
         public static int TileSize { get; private set; } = 64;
@@ -43,67 +42,58 @@ namespace Piratico
         {
             var direction = gameForm.ScoutMode.LastScoutDirection;
             var newMapCell = CurrentMapCell;
-            SwitchToMapCell((Direction)(-(int)direction));
+            ExitScoutModeManually();
             var originMapCell = CurrentMapCell;
             var (originBorderPoint, newBorderPoint) = TileMap.GetMinPathBetweenMapCells(
                 originMapCell, 
-                newMapCell, 
-                gameForm.ScoutMode.LastScoutDirection,
+                newMapCell,
+                direction,
                 Player.CurrentMapTile, 
                 endTile);
-            gameForm.ScoutMode.ExitScoutModeManually();
-            newMapCell.GenerateNeighbors();
             var partOfPathIsDone = false;
-            bool PlayerSteps()
+            var originBorderTile = originMapCell.GetMapTile(originBorderPoint);
+            var newBorderTile = newMapCell.GetMapTile(newBorderPoint);
+            void PlayerSteps()
             {
                 if (!partOfPathIsDone)
                 {
-                    partOfPathIsDone = MoveShipToNextTile(Player, originMapCell.GetMapTile(originBorderPoint));
-                    return false;
+                    if (Player.CurrentMapTile == originBorderTile) 
+                        partOfPathIsDone = true;
+                    else
+                    {
+                        MoveShipToNextTile(Player, originBorderTile);
+                        return;
+                    }
                 }
+
                 if (CurrentMapCell != newMapCell)
                 {
                     SwitchToMapCell(direction);
-                    Player.MoveToNextTile(newMapCell.GetMapTile(newBorderPoint));
-                    gameForm.DrawShipInTile(Player, newMapCell.GetMapTile(newBorderPoint).SpriteBox);
+                    Player.MoveToNextTile(newBorderTile);
+                    gameForm.DrawShipInTile(Player, newBorderTile.SpriteBox);
+                    return;
                 }
-                else
-                    return MoveShipToNextTile(Player, endTile);
 
-                return false;
+                Player.IsMoving = Player.CurrentMapTile != endTile;
+                if(!Player.IsMoving) return;
+                MoveShipToNextTile(Player, endTile);
             }
 
-            StartTimer(PlayerSteps);
+            Player.StartMovement(PlayerSteps);
+            newMapCell.GenerateNeighbors();
         }
 
-        public void StartTimer(Func<bool> playerSteps)
+        public void MoveShipToNextTile(Ship ship, MapTile newMapTile)
         {
-            if(timerStarted) return;
-            timerStarted = true;
-            timer = new Timer {Interval = 200};
-            timer.Tick += (sender, args) =>
-            {
-                if (!playerSteps()) return;
-                timer.Stop();
-                timerStarted = false;
-            };
-            timer.Tick += (sender, args) => LetEnemiesDoTheirMove();
-            timer.Start();
-        }
-
-        public bool MoveShipToNextTile(Ship ship, MapTile newMapTile)
-        {
-            if (ship.CurrentMapTile == newMapTile) return true;
+            if (ship.CurrentMapTile == newMapTile) return;
             var (newTile, finalDirection) = CurrentMapCell.GetNextShipMove(ship.MapPosition, newMapTile.MapPosition);
-            if (newTile == null) return true;
-            newTile.HasShipOnTile = true;
-            CurrentMapCell.GetMapTile(ship.MapPosition).HasShipOnTile = false;
+            if (newTile == null) return;
             ship.MoveToNextTile(newTile, finalDirection);
             gameForm.DrawShipInTile(ship, CurrentMapCell.GetMapTile(ship.MapPosition).SpriteBox);
-            return ship.CurrentMapTile == newMapTile;
+            if (ship is Player player) player.StepEnded = true;
         }
 
-        private void LetEnemiesDoTheirMove()
+        public void LetEnemiesDoTheirMove()
         {
             foreach (var enemy in CurrentMapCell.Enemies) enemy.ChooseAndExecuteBestAction();
         }
@@ -111,11 +101,14 @@ namespace Piratico
         public void DeleteShip(Ship ship)
         {
             if (Player.Equals(ship))
-            {
                 Application.Restart();
-            }
             else
                 gameForm.DeleteShip(ship);
         }
+
+        public void ExitScoutModeManually() =>
+            gameForm.ScoutMode.ExitScoutModeManually();
+
+        public void ExitShootModeManually() => gameForm.ShootMode.TurnOff();
     }
 }

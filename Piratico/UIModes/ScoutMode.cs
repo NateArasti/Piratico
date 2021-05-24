@@ -10,8 +10,8 @@ namespace Piratico
 
         public ScoutData(Button scoutModeButton, Dictionary<Direction, Button> scoutButtons)
         {
-            this.ScoutModeButton = scoutModeButton;
-            this.ScoutButtons = scoutButtons;
+            ScoutModeButton = scoutModeButton;
+            ScoutButtons = scoutButtons;
         }
     }
 
@@ -37,8 +37,12 @@ namespace Piratico
         {
             scoutModeButton.Click += (sender, args) =>
             {
+                if(gameModel.PlayerDoingSomething) return;
                 if (!IsScouting)
+                {
+                    if (gameModel.IsInShootMode) gameModel.ExitShootModeManually();
                     SwitchScoutButtonVisibility(true);
+                }
                 else
                 {
                     gameModel.SwitchToMapCell((Direction)(-(int)LastScoutDirection));
@@ -57,6 +61,8 @@ namespace Piratico
 
         private void ScoutMoveButtonClick(Button oppositeButton, Direction direction)
         {
+            if (gameModel.PlayerDoingSomething) return;
+            if(gameModel.IsInShootMode) gameModel.ExitShootModeManually();
             if (oppositeButton.Visible)
             {
                 SwitchScoutButtonVisibility(false);
@@ -78,9 +84,13 @@ namespace Piratico
 
         public void ExitScoutModeManually()
         {
-            LastScoutDirection = Direction.None;
-            IsScouting = false;
-            SwitchScoutButtonVisibility(false);
+            if(OnNewMapCell) scoutModeButton.PerformClick();
+            else
+            {
+                LastScoutDirection = Direction.None;
+                IsScouting = false;
+                SwitchScoutButtonVisibility(false);
+            }
         }
     }
 }

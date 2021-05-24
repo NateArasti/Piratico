@@ -4,31 +4,27 @@ using System.Windows.Forms;
 
 namespace Piratico
 {
-    public enum Rotations
-    {
-        None = -1,
-        Right = 0,
-        Up = 90,
-        Left = 180,
-        Down = 270
-    }
-
     public class Ship
     {
-        public static IReadOnlyDictionary<Direction, Rotations> DirectionsRotations = new Dictionary<Direction, Rotations>
+        public static IReadOnlyDictionary<Direction, Rotation> DirectionsRotations = new Dictionary<Direction, Rotation>
         {
-            {Direction.None, Rotations.None},
-            {Direction.Down, Rotations.Down},
-            {Direction.Up, Rotations.Up},
-            {Direction.Right, Rotations.Right},
-            {Direction.Left, Rotations.Left}
+            {Direction.None, Rotation.None},
+            {Direction.Down, Rotation.Down},
+            {Direction.Up, Rotation.Up},
+            {Direction.Right, Rotation.Right},
+            {Direction.Left, Rotation.Left}
         };
 
-        public Point MapPosition { get; private set; }
         public readonly PictureBox SpriteBox;
-        private Rotations currentRotation = Rotations.Down;
-        protected readonly GameModel GameModel;
+
         public MapTile CurrentMapTile => GameModel.CurrentMapCell.GetMapTile(MapPosition);
+        public Point MapPosition { get; private set; }
+
+        protected ShipParams ShipParams;
+
+        private Rotation currentRotation = Rotation.Down;
+        public bool IsShooting;
+        protected readonly GameModel GameModel;
 
         public Ship(Image sprite, Size spriteSize, Point mapPosition, PictureBox parentPictureBox, GameModel gameModel)
         {
@@ -36,18 +32,18 @@ namespace Piratico
             MapPosition = mapPosition;
             SpriteBox = new PictureBox
             {
+                Parent = parentPictureBox,
                 Image = sprite,
                 Size = spriteSize,
                 BackColor = Color.Transparent,
                 ForeColor = Color.Transparent,
                 SizeMode = PictureBoxSizeMode.Zoom
             };
-            parentPictureBox.Controls.Add(SpriteBox);
         }
 
-        private void RotateTo(Rotations newRotation)
+        private void RotateTo(Rotation newRotation)
         {
-            if(newRotation == Rotations.None) return;
+            if(newRotation == Rotation.None) return;
             var delta = newRotation > currentRotation
                 ? 360 - (newRotation - currentRotation)
                 : currentRotation - newRotation;
@@ -69,6 +65,8 @@ namespace Piratico
         public void MoveToNextTile(MapTile newTile, Point direction = new Point())
         {
             RotateTo(DirectionsRotations[TileMap.MapDirections[direction]]);
+            CurrentMapTile.HasShipOnTile = false;
+            newTile.HasShipOnTile = true;
             MapPosition = newTile.MapPosition;
         }
 
@@ -76,6 +74,20 @@ namespace Piratico
         {
             GameModel.MoveShipToNextTile(this, shipToBoard.CurrentMapTile);
             GameModel.DeleteShip(shipToBoard);
+        }
+
+        public void Shoot(Ship shipToShoot)
+        {
+            Direction direction;
+            if (shipToShoot.MapPosition.Y == MapPosition.Y)
+                direction = shipToShoot.MapPosition.X < MapPosition.X ? Direction.Left : Direction.Right;
+            else if(shipToShoot.MapPosition.X == MapPosition.X)
+                direction = shipToShoot.MapPosition.Y < MapPosition.Y ? Direction.Up : Direction.Down;
+            else 
+                return;
+            var ball = new CannonBall(direction, this);
+            ball.StartMovement(shipToShoot.SpriteBox.Parent.Location);
+            GameModel.ExitShootModeManually();
         }
     }
 }

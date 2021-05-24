@@ -19,7 +19,7 @@ namespace Piratico
         public readonly Point MapPosition;
         public readonly int Index;
 
-        public bool HasShipOnTile { get; set; }
+        public bool HasShipOnTile;
 
         public MapTile(Point mapPosition, int index, GameModel gameModel, MapTileType tileType, Image sprite)
         {
@@ -38,16 +38,27 @@ namespace Piratico
 
             if(TileType != MapTileType.Island)
             {
-                SpriteBox.MouseEnter += (sender, args) => SpriteBox.Image = chosenTile;
-                SpriteBox.MouseLeave += (sender, args) => SpriteBox.Image = originalTile;
+                SpriteBox.MouseEnter += (sender, args) =>
+                {
+                    if (gameModel.IsInShootMode) return;
+                    SpriteBox.Image = chosenTile;
+                };
+                SpriteBox.MouseLeave += (sender, args) =>
+                {
+                    if (gameModel.IsInShootMode) return;
+                    SpriteBox.Image = originalTile;
+                };
                 SpriteBox.MouseDoubleClick += (sender, args) =>
                 {
+                    if(gameModel.IsInShootMode) return;
                     if (gameModel.OnNewMapCell)
                         gameModel.MoveToNewMapCell(this);
                     else
-                    {
-                        gameModel.StartTimer(() => gameModel.MoveShipToNextTile(gameModel.Player, this));
-                    }
+                        gameModel.Player.StartMovement(() =>
+                        {
+                            gameModel.MoveShipToNextTile(gameModel.Player, this);
+                            gameModel.Player.IsMoving = gameModel.Player.CurrentMapTile != this;
+                        });
                 };
             }
         }

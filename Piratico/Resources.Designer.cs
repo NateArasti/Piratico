@@ -63,6 +63,16 @@ namespace Piratico {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap CannonBall {
+            get {
+                object obj = ResourceManager.GetObject("CannonBall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ChosenSeaTile {
             get {
                 object obj = ResourceManager.GetObject("ChosenSeaTile", resourceCulture);

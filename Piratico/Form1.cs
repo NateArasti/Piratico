@@ -7,6 +7,7 @@ namespace Piratico
     {
         private readonly GameModel gameModel;
         public readonly ScoutMode ScoutMode;
+        public readonly ShootMode ShootMode;
 
         public PiraticoGame()
         {
@@ -20,6 +21,7 @@ namespace Piratico
                 [Direction.Right] = Right
             };
             ScoutMode = new ScoutMode(new ScoutData(Scout, scoutButtons), gameModel);
+            ShootMode = new ShootMode(gameModel, Shoot);
             DrawMapCell(gameModel.CurrentMapCell.MapCellControlPanel);
             Invalidate();
         }

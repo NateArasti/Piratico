@@ -46,8 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Direction.cs" />
-    <Compile Include="Enemy.cs" />
+    <Compile Include="Ship\CannonBall.cs" />
+    <Compile Include="Enums\Direction.cs" />
+    <Compile Include="Ship\Enemy.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,10 +56,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GameModel.cs" />
-    <Compile Include="IslandsGenerator.cs" />
-    <Compile Include="MapCell.cs" />
-    <Compile Include="MapTile.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Map\IslandsGenerator.cs" />
+    <Compile Include="Map\MapCell.cs" />
+    <Compile Include="Map\MapTile.cs" />
+    <Compile Include="Ship\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -66,9 +67,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScoutMode.cs" />
-    <Compile Include="Ship.cs" />
-    <Compile Include="TileMap.cs" />
+    <Compile Include="Enums\Rotation.cs" />
+    <Compile Include="UIModes\ScoutMode.cs" />
+    <Compile Include="Ship\Ship.cs" />
+    <Compile Include="Ship\ShipParams.cs" />
+    <Compile Include="UIModes\ShootMode.cs" />
+    <Compile Include="Map\TileMap.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -113,5 +117,9 @@
   <ItemGroup>
     <None Include="Resources\EnemyShip.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CannonBall.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

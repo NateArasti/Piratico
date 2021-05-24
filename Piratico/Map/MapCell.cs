@@ -70,15 +70,15 @@ namespace Piratico
                 var mapPosition = new Point(random.Next(MapSize.Width), random.Next(MapSize.Height));
                 var mapTile = GetMapTile(mapPosition);
                 if (mapTile.TileType != MapTileType.Sea ||
+                    Player.PlayerStartPosition == mapPosition ||
                     mapTile.HasShipOnTile) continue;
                 enemyCount -= 1;
-                Enemies.Add(
-                    new Enemy(Resources.EnemyShip,
-                        new Size(GameModel.TileSize, GameModel.TileSize),
-                        mapPosition,
-                        mapTile.SpriteBox,
-                        gameModel)
-                );
+                var enemy = new Enemy(Resources.EnemyShip,
+                    new Size(GameModel.TileSize, GameModel.TileSize),
+                    mapPosition,
+                    mapTile.SpriteBox,
+                    gameModel);
+                Enemies.Add(enemy);
                 mapTile.HasShipOnTile = true;
             } while (enemyCount > 0);
         }
@@ -100,6 +100,9 @@ namespace Piratico
             tileMap.GetNextShipMove(shipMapPosition, finishMapPosition);
 
         public IEnumerable<MapTile> GetNeighborTiles(Point mapPosition) => tileMap.GetNeighborTiles(mapPosition);
+
+        public IEnumerable<MapTile> GetHorizontalAndVerticalSeaTiles(Point startPosition) =>
+            tileMap.GetHorizontalAndVerticalSeaTiles(startPosition);
 
         public MapTile GetMapTile(Point mapPosition) => tileMap.GetMapTile(mapPosition);
 
