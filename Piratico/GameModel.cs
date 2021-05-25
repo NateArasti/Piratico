@@ -92,6 +92,8 @@ namespace Piratico
             if (newTile == null) return;
             ship.MoveToNextTile(newTile, finalDirection);
             gameForm.DrawShipInTile(ship, CurrentMapCell.GetMapTile(ship.MapPosition).SpriteBox);
+
+            // Хорошо если не нужно будет проверять тип сущности, чтобы правильно с ней взаимодействовать. Иначе код здесь быстро разрастется.
             if (ship is Player player) player.StepEnded = true;
         }
 
