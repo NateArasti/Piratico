@@ -10,6 +10,8 @@ namespace Piratico
         private readonly PiraticoGame gameForm;
 
         public bool OnNewMapCell => gameForm.ScoutMode.OnNewMapCell;
+        // Если нужно будет добавить еще один режим просмотра, то код здесь станет запутанней.
+        // Хорошо бы если бы можно было легко добавить новые режимы
         public bool IsInShootMode => gameForm.ShootMode.IsInShootMode;
         public MapCell CurrentMapCell { get; private set; }
         public Player Player { get; }
@@ -90,6 +92,8 @@ namespace Piratico
             if (newTile == null) return;
             ship.MoveToNextTile(newTile, finalDirection);
             gameForm.DrawShipInTile(ship, CurrentMapCell.GetMapTile(ship.MapPosition).SpriteBox);
+
+            // Хорошо если не нужно будет проверять тип сущности, чтобы правильно с ней взаимодействовать. Иначе код здесь быстро разрастется.
             if (ship is Player player) player.StepEnded = true;
         }
 
@@ -100,6 +104,7 @@ namespace Piratico
 
         public void DeleteShip(Ship ship)
         {
+            // стоит сделать какую-то задержку или индикацию того, что игра закончена, иначе игрок не понимает что происходит
             if (Player.Equals(ship))
                 Application.Restart();
             else

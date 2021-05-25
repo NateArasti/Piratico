@@ -53,6 +53,7 @@ namespace Piratico
 
         public void StartMovement(Point endPoint)
         {
+            // Здесь используется свой таймер. Он может рассогласоваться с другими таймерами. например, я могу инициировать стрельбу и начать движение.
             var timer = new Timer {Interval = 20};
             timer.Tick += (sender, args) =>
             {

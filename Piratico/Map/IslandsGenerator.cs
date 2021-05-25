@@ -6,12 +6,12 @@ namespace Piratico
 {
     class IslandsGenerator
     {
-        private static readonly (Bitmap bigSprite, MapTileType[,] tileTypes, Image[,] tileSprites)[] Islands = 
+        private static readonly (Bitmap bigSprite, MapTileType[,] tileTypes, Image[,] tileSprites)[] Islands =
         {
             (
                 //Размеры массивов указаны для удобства
                 // ReSharper disable RedundantExplicitArraySize
-                Resources.SimpleIsland, 
+                Resources.SimpleIsland,
                 new MapTileType[5, 5]
                 {
                     {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
@@ -20,7 +20,7 @@ namespace Piratico
                     {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
                     {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow}
                 },
-                    new Image[5, 5]
+                new Image[5, 5]
                 {
                     {null, null, null, null, null},
                     {null, null, null, null, null},
@@ -106,8 +106,7 @@ namespace Piratico
 
         private static Image CropImage(Image image, Rectangle selection)
         {
-            if (!(image is Bitmap bmp))
-                throw new ArgumentException("No valid bitmap");
+            var bmp = new Bitmap(image);
             var cropBmp = bmp.Clone(selection, bmp.PixelFormat);
 
             return cropBmp;
