@@ -1,11 +1,12 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
+using System.Linq;
 
 namespace Piratico
 {
-    public class GameModel
+    public class Game
     {
-        public bool PlayerDoingSomething => Player.IsMoving || Player.IsShooting; 
+        public bool PlayerDoingSomething => Player.IsMoving || Player.IsShooting;
+        public bool EnemiesTurn => CurrentMapCell.Enemies.Count(enemy => enemy.IsShooting) > 0;
 
         private readonly PiraticoGame gameForm;
 
@@ -16,7 +17,7 @@ namespace Piratico
         public static int TileSize { get; private set; } = 64;
         public static int Width { get; private set; } = 1280;
 
-        public GameModel(PiraticoGame gameForm)
+        public Game(PiraticoGame gameForm)
         {
             this.gameForm = gameForm;
             TileSize = gameForm.ClientSize.Height / MapCell.MapSize.Height;
@@ -26,7 +27,7 @@ namespace Piratico
             Player = new Player(
                 Resources.PlayerShip,
                 new Size(TileSize, TileSize),
-                CurrentMapCell.GetMapTile(Player.PlayerStartPosition).SpriteBox,
+                CurrentMapCell.TileMap.GetMapTile(Player.PlayerStartPosition).SpriteBox,
                 this);
         }
 
@@ -51,8 +52,8 @@ namespace Piratico
                 Player.CurrentMapTile, 
                 endTile);
             var partOfPathIsDone = false;
-            var originBorderTile = originMapCell.GetMapTile(originBorderPoint);
-            var newBorderTile = newMapCell.GetMapTile(newBorderPoint);
+            var originBorderTile = originMapCell.TileMap.GetMapTile(originBorderPoint);
+            var newBorderTile = newMapCell.TileMap.GetMapTile(newBorderPoint);
             void PlayerSteps()
             {
                 if (!partOfPathIsDone)
@@ -86,11 +87,12 @@ namespace Piratico
         public void MoveShipToNextTile(Ship ship, MapTile newMapTile)
         {
             if (ship.CurrentMapTile == newMapTile) return;
-            var (newTile, finalDirection) = CurrentMapCell.GetNextShipMove(ship.MapPosition, newMapTile.MapPosition);
+            var (newTile, finalDirection) = 
+                CurrentMapCell.TileMap.GetNextShipMove(ship.MapPosition, newMapTile.MapPosition);
             if (newTile == null) return;
             ship.MoveToNextTile(newTile, finalDirection);
-            gameForm.DrawShipInTile(ship, CurrentMapCell.GetMapTile(ship.MapPosition).SpriteBox);
-            if (ship is Player player) player.StepEnded = true;
+            gameForm.DrawShipInTile(ship, CurrentMapCell.TileMap.GetMapTile(ship.MapPosition).SpriteBox);
+            if (ship is Player player) player.EndStep();
         }
 
         public void LetEnemiesDoTheirMove()
@@ -101,14 +103,15 @@ namespace Piratico
         public void DeleteShip(Ship ship)
         {
             if (Player.Equals(ship))
-                Application.Restart();
+                gameForm.EndGame();
             else
-                gameForm.DeleteShip(ship);
+                CurrentMapCell.Enemies.Remove(ship as Enemy);
         }
 
-        public void ExitScoutModeManually() =>
-            gameForm.ScoutMode.ExitScoutModeManually();
+        public void ExitScoutModeManually() => gameForm.ScoutMode.ExitScoutModeManually();
 
         public void ExitShootModeManually() => gameForm.ShootMode.TurnOff();
+
+        public void UpdatePlayerResourcesUI() => gameForm.DrawPlayerResources();
     }
 }

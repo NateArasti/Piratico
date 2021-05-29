@@ -118,17 +118,41 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AttackTile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AttackTile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="CannonBall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\CannonBall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ChosenSeaTile" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\ChosenSeaTile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ChosenTile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\ChosenTile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EnemyShip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\EnemyShip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="EnemyShip_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\EnemyShip_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnemyShip_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\EnemyShip_33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EnemyShip_66" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\EnemyShip_66.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="PlayerShip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\PlayerShip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PlayerShip_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PlayerShip_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PlayerShip_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PlayerShip_33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PlayerShip_66" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PlayerShip_66.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShootModeTile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\ShootModeTile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SimpleIsland" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\SimpleIsland.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -9,21 +9,25 @@ namespace Piratico
     public class Player : Ship
     {
         public static readonly Point PlayerStartPosition =
-            new Point(MapCell.MapSize.Width / 2, MapCell.MapSize.Height / 2);
+            new(MapCell.MapSize.Width / 2, MapCell.MapSize.Height / 2);
 
-        public bool IsMoving;
-        public bool StepEnded;
-        private readonly Timer playerStepChecker = new Timer {Interval = 50};
+        public bool IsMoving { get; set; }
 
-        public Player(Image sprite, Size spriteSize, PictureBox parentPictureBox, GameModel gameModel) : 
-            base(sprite, spriteSize, PlayerStartPosition, parentPictureBox, gameModel)
+        private bool StepEnded { get; set; }
+
+        private readonly Timer playerStepChecker = new() {Interval = 50};
+
+        public Player(Image sprite, Size spriteSize, PictureBox parentPictureBox, Game game) : 
+            base(sprite, spriteSize, PlayerStartPosition, parentPictureBox, game)
         {
             ShipParams = new ShipParams();
-            playerStepChecker.Tick += (sender, args) =>
+            StateSprites = new Image[]
+                {Resources.PlayerShip, Resources.PlayerShip_66, Resources.PlayerShip_33, Resources.PlayerShip_0};
+            playerStepChecker.Tick += (_, _) =>
             {
                 if (!StepEnded) return;
                 Thread.Sleep(100);
-                GameModel.LetEnemiesDoTheirMove();
+                Game.LetEnemiesDoTheirMove();
                 StepEnded = false;
             };
             playerStepChecker.Start();
@@ -31,10 +35,10 @@ namespace Piratico
 
         public void StartMovement(Action playerMoves)
         {
-            if (GameModel.PlayerDoingSomething) return;
+            if (Game.PlayerDoingSomething) return;
             IsMoving = true;
             var timer = new Timer { Interval = 300 };
-            timer.Tick += (sender, args) =>
+            timer.Tick += (_, _) =>
             {
                 playerMoves();
                 if (IsMoving) return;
@@ -43,5 +47,18 @@ namespace Piratico
             };
             timer.Start();
         }
+
+        public (int strength, int crewAmount, int consumables, int gold, int upgradeCost) GetShipParams() =>
+            (ShipParams.Strength, ShipParams.CrewAmount, ShipParams.Consumables, ShipParams.Gold, ShipParams.ConsumablesPerLevel);
+
+        public void UpgradeStats()
+        {
+            if(!ShipParams.AbleToUpgrade()) return;
+            ShipParams.Upgrade();
+            CheckCurrentShipState();
+            Game.UpdatePlayerResourcesUI();
+        }
+
+        public void EndStep() => StepEnded = true;
     }
 }

@@ -12,25 +12,27 @@ namespace Piratico
 
     public class MapTile
     {
-        private readonly Image chosenTile = Resources.ChosenSeaTile;
+        private readonly Image chosenTile = Resources.ChosenTile;
+
         public readonly MapTileType TileType;
         public readonly PictureBox SpriteBox;
+        public readonly Image OriginalTile;
 
         public readonly Point MapPosition;
         public readonly int Index;
 
         public bool HasShipOnTile;
 
-        public MapTile(Point mapPosition, int index, GameModel gameModel, MapTileType tileType, Image sprite)
+        public MapTile(Point mapPosition, int index, Game game, MapTileType tileType, Image sprite)
         {
             Index = index;
             MapPosition = mapPosition;
             TileType = tileType;
-            var originalTile = sprite ?? Resources.SimpleSeaTile;
+            OriginalTile = sprite ?? Resources.SimpleSeaTile;
             SpriteBox = new PictureBox
             {
-                Image = originalTile,
-                Size = new Size(GameModel.TileSize, GameModel.TileSize),
+                Image = OriginalTile,
+                Size = new Size(Game.TileSize, Game.TileSize),
                 SizeMode = PictureBoxSizeMode.Zoom,
                 ForeColor = Color.Transparent,
                 BackColor = Color.Transparent
@@ -38,26 +40,26 @@ namespace Piratico
 
             if(TileType != MapTileType.Island)
             {
-                SpriteBox.MouseEnter += (sender, args) =>
+                SpriteBox.MouseEnter += (_, _) =>
                 {
-                    if (gameModel.IsInShootMode) return;
+                    if (game.IsInShootMode) return;
                     SpriteBox.Image = chosenTile;
                 };
-                SpriteBox.MouseLeave += (sender, args) =>
+                SpriteBox.MouseLeave += (_, _) =>
                 {
-                    if (gameModel.IsInShootMode) return;
-                    SpriteBox.Image = originalTile;
+                    if (game.IsInShootMode) return;
+                    SpriteBox.Image = OriginalTile;
                 };
-                SpriteBox.MouseDoubleClick += (sender, args) =>
+                SpriteBox.MouseDoubleClick += (_, _) =>
                 {
-                    if(gameModel.IsInShootMode) return;
-                    if (gameModel.OnNewMapCell)
-                        gameModel.MoveToNewMapCell(this);
+                    if(game.IsInShootMode) return;
+                    if (game.OnNewMapCell)
+                        game.MoveToNewMapCell(this);
                     else
-                        gameModel.Player.StartMovement(() =>
+                        game.Player.StartMovement(() =>
                         {
-                            gameModel.MoveShipToNextTile(gameModel.Player, this);
-                            gameModel.Player.IsMoving = gameModel.Player.CurrentMapTile != this;
+                            game.MoveShipToNextTile(game.Player, this);
+                            game.Player.IsMoving = game.Player.CurrentMapTile != this;
                         });
                 };
             }

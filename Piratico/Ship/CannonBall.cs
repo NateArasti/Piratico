@@ -19,7 +19,7 @@ namespace Piratico
             {
                 Location = ship.CurrentMapTile.SpriteBox.Location,
                 Image = Resources.CannonBall,
-                Size = new Size(GameModel.TileSize, GameModel.TileSize),
+                Size = new Size(Game.TileSize, Game.TileSize),
                 SizeMode = PictureBoxSizeMode.CenterImage,
                 ForeColor = Color.Transparent,
                 BackgroundImage = Resources.SimpleSeaTile
@@ -31,19 +31,19 @@ namespace Piratico
                 case Direction.None:
                     throw new ArgumentException();
                 case Direction.Up:
-                    pictureBox.Location += new Size(0, -GameModel.TileSize / 2);
+                    pictureBox.Location += new Size(0, -Game.TileSize / 2);
                     positionDelta = new Size(0, -Speed);
                     break;
                 case Direction.Down:
-                    pictureBox.Location += new Size(0, GameModel.TileSize / 2);
+                    pictureBox.Location += new Size(0, Game.TileSize / 2);
                     positionDelta = new Size(0, Speed);
                     break;
                 case Direction.Right:
-                    pictureBox.Location += new Size(GameModel.TileSize / 2, 0);
+                    pictureBox.Location += new Size(Game.TileSize / 2, 0);
                     positionDelta = new Size(Speed, 0);
                     break;
                 case Direction.Left:
-                    pictureBox.Location += new Size(-GameModel.TileSize / 2, 0);
+                    pictureBox.Location += new Size(-Game.TileSize / 2, 0);
                     positionDelta = new Size(-Speed, 0);
                     break;
                 default:
@@ -51,29 +51,30 @@ namespace Piratico
             }
         }
 
-        public void StartMovement(Point endPoint)
+        public void StartMovement(Point endPoint, Action shootEndAction)
         {
             var timer = new Timer {Interval = 20};
-            timer.Tick += (sender, args) =>
+            timer.Tick += (_, _) =>
             {
                 if (isEnded)
                 {
                     timer.Stop();
+                    shootEndAction();
                     pictureBox.Parent.Controls.Remove(pictureBox);
                     shooterShip.IsShooting = false;
-                    if (shooterShip is Player player) player.StepEnded = true;
+                    if (shooterShip is not Player playerShip) return;
+                    playerShip.EndStep();
                 }
                 else Move(endPoint);
             };
             timer.Start();
-            shooterShip.IsShooting = true;
         }
 
         private void Move(Point endPoint)
         {
             pictureBox.Location += positionDelta;
-            if (Math.Abs(endPoint.X - pictureBox.Location.X) < GameModel.TileSize &&
-                Math.Abs(endPoint.Y - pictureBox.Location.Y) < GameModel.TileSize)
+            if (Math.Abs(endPoint.X - pictureBox.Location.X) < Game.TileSize &&
+                Math.Abs(endPoint.Y - pictureBox.Location.Y) < Game.TileSize)
                 isEnded = true;
         }
     }

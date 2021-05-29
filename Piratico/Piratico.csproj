@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -55,7 +57,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="GameModel.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Map\IslandsGenerator.cs" />
     <Compile Include="Map\MapCell.cs" />
     <Compile Include="Map\MapTile.cs" />
@@ -106,9 +108,6 @@
     <None Include="Resources\SimpleIsland.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ChosenSeaTile.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\SimpleSeaTile.png" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +119,32 @@
   <ItemGroup>
     <None Include="Resources\CannonBall.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\EnemyShip_66.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EnemyShip_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EnemyShip_33.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PlayerShip_66.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PlayerShip_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PlayerShip_33.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ChosenTile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ShootModeTile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AttackTile.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

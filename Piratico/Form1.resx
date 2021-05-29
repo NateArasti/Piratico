@@ -117,6 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="IntroText.Text" xml:space="preserve">
+    <value>Привет! Сейчас я приведу правила этой игры:
+-Карта бесконечная, но разделена на ячейки. Вы можете перемещаться между ячейками с помощью кнопки Scout
+-При этом каждая ячейка представляет из себя прямоугольник, состоящий из мальеньких интерактивных квадратов
+-При двойном нажатии квадрат моря вы переместитесь на этот квадрат
+-Также в каждой ячейке есть враги, но между ячейками они перемещаться не могут
+-Вы можете стрелять во врагов с помощью кнопки Shoot, если они на линии огня
+-Также если вы на соседних квадратах с врагом вы можете попробовать взять его на абордаж
+-Предыдущие 2 пункта работают и для врагов, т.е. они могут стрелять в вас и брать на абордаж
+Удачи!</value>
+  </data>
   <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

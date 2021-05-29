@@ -63,6 +63,16 @@ namespace Piratico {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AttackTile {
+            get {
+                object obj = ResourceManager.GetObject("AttackTile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap CannonBall {
             get {
                 object obj = ResourceManager.GetObject("CannonBall", resourceCulture);
@@ -73,9 +83,9 @@ namespace Piratico {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ChosenSeaTile {
+        internal static System.Drawing.Bitmap ChosenTile {
             get {
-                object obj = ResourceManager.GetObject("ChosenSeaTile", resourceCulture);
+                object obj = ResourceManager.GetObject("ChosenTile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +103,79 @@ namespace Piratico {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap EnemyShip_0 {
+            get {
+                object obj = ResourceManager.GetObject("EnemyShip_0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap EnemyShip_33 {
+            get {
+                object obj = ResourceManager.GetObject("EnemyShip_33", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap EnemyShip_66 {
+            get {
+                object obj = ResourceManager.GetObject("EnemyShip_66", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PlayerShip {
             get {
                 object obj = ResourceManager.GetObject("PlayerShip", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PlayerShip_0 {
+            get {
+                object obj = ResourceManager.GetObject("PlayerShip_0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PlayerShip_33 {
+            get {
+                object obj = ResourceManager.GetObject("PlayerShip_33", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PlayerShip_66 {
+            get {
+                object obj = ResourceManager.GetObject("PlayerShip_66", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ShootModeTile {
+            get {
+                object obj = ResourceManager.GetObject("ShootModeTile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

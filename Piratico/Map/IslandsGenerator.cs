@@ -31,8 +31,8 @@ namespace Piratico
             )
         };
 
-        private static readonly Point CheckPoint = new Point(-1, -1);
-        private static readonly Random Random = new Random();
+        private static readonly Point CheckPoint = new(-1, -1);
+        private static readonly Random Random = new();
 
         public static (MapTileType tileType, Image tileSprite)[,] GenerateIslands(int mapWidth, int mapHeight)
         {
@@ -93,20 +93,18 @@ namespace Piratico
             for (var i = 0; i < width; i++)
             for (var j = 0; j < height; j++)
             {
-                if (tileTypes[i, j] != MapTileType.Sea)
-                {
-                    if (tiles[i, j] == null)
-                        tiles[i, j] = CropImage(Islands[islandIndex].bigSprite,
-                            new Rectangle(i * spriteSize.Width, j * spriteSize.Width, 
-                                spriteSize.Width, spriteSize.Height));
-                    currentMap[spot.X + i, spot.Y + j] = (tileTypes[i, j], tiles[i, j]);
-                }
+                if (tileTypes[i, j] == MapTileType.Sea) continue;
+                tiles[i, j] ??= CropImage(Islands[islandIndex].bigSprite,
+                    new Rectangle(i * spriteSize.Width, j * spriteSize.Width,
+                        spriteSize.Width, spriteSize.Height));
+                currentMap[spot.X + i, spot.Y + j] = (tileTypes[i, j], tiles[i, j]);
             }
         }
 
         private static Image CropImage(Image image, Rectangle selection)
         {
-            if (!(image is Bitmap bmp))
+            var bmp = image as Bitmap;
+            if (bmp == null)
                 throw new ArgumentException("No valid bitmap");
             var cropBmp = bmp.Clone(selection, bmp.PixelFormat);
 

@@ -7,26 +7,27 @@ namespace Piratico
 {
     public class MapCell
     {
-        public static Size MapSize = new Size(20, 15);
+        public static Size MapSize = new(20, 15);
 
-        private readonly GameModel gameModel;
+        private readonly Game game;
         private readonly Dictionary<Direction, MapCell> neighbors;
-        private readonly TileMap tileMap;
 
-        public List<Enemy> Enemies { get; } = new List<Enemy>();
+        public List<Enemy> Enemies { get; } = new();
+
         public readonly Panel MapCellControlPanel;
+        public readonly TileMap TileMap;
 
-        public MapCell(GameModel gameModel)
+        public MapCell(Game game)
         {
-            this.gameModel = gameModel;
-            var deltaFromBorders = (GameModel.Width - MapSize.Width * GameModel.TileSize) / 2;
+            this.game = game;
+            var deltaFromBorders = (Game.Width - MapSize.Width * Game.TileSize) / 2;
             MapCellControlPanel = new Panel
             {
                 Location = new Point(0, 0),
                 Dock = DockStyle.Fill,
                 ForeColor = Color.Transparent
             };
-            tileMap = new TileMap(deltaFromBorders, gameModel, MapCellControlPanel);
+            TileMap = new TileMap(deltaFromBorders, game, MapCellControlPanel);
             SpawnEnemies();
             neighbors = new Dictionary<Direction, MapCell>
             {
@@ -38,7 +39,7 @@ namespace Piratico
             };
         }
 
-        private MapCell(Direction direction, MapCell neighbor) : this(neighbor.gameModel)
+        private MapCell(Direction direction, MapCell neighbor) : this(neighbor.game)
         {
             switch (direction)
             {
@@ -68,16 +69,16 @@ namespace Piratico
             do
             {
                 var mapPosition = new Point(random.Next(MapSize.Width), random.Next(MapSize.Height));
-                var mapTile = GetMapTile(mapPosition);
+                var mapTile = TileMap.GetMapTile(mapPosition);
                 if (mapTile.TileType != MapTileType.Sea ||
                     Player.PlayerStartPosition == mapPosition ||
                     mapTile.HasShipOnTile) continue;
                 enemyCount -= 1;
                 var enemy = new Enemy(Resources.EnemyShip,
-                    new Size(GameModel.TileSize, GameModel.TileSize),
+                    new Size(Game.TileSize, Game.TileSize),
                     mapPosition,
                     mapTile.SpriteBox,
-                    gameModel);
+                    game);
                 Enemies.Add(enemy);
                 mapTile.HasShipOnTile = true;
             } while (enemyCount > 0);
@@ -88,25 +89,10 @@ namespace Piratico
             foreach (var value in Enum.GetValues(typeof(Direction)))
             {
                 var direction = (Direction)value;
-                if (neighbors[direction] == null)
-                    neighbors[direction] = new MapCell(direction, this);
+                neighbors[direction] ??= new MapCell(direction, this);
             }
         }
 
         public MapCell GetNeighbor(Direction direction) => neighbors[direction];
-
-        public (MapTile newTile, Point finalDirection)
-            GetNextShipMove(Point shipMapPosition, Point finishMapPosition) =>
-            tileMap.GetNextShipMove(shipMapPosition, finishMapPosition);
-
-        public IEnumerable<MapTile> GetNeighborTiles(Point mapPosition) => tileMap.GetNeighborTiles(mapPosition);
-
-        public IEnumerable<MapTile> GetHorizontalAndVerticalSeaTiles(Point startPosition) =>
-            tileMap.GetHorizontalAndVerticalSeaTiles(startPosition);
-
-        public MapTile GetMapTile(Point mapPosition) => tileMap.GetMapTile(mapPosition);
-
-        public int GetPathLengthToTile(MapTile startMapTile, MapTile endMapTile) =>
-            tileMap.GetPathLengthToTile(startMapTile, endMapTile);
     }
 }

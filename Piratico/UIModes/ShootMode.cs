@@ -6,15 +6,15 @@ namespace Piratico
     {
         public bool IsInShootMode { get; private set; }
 
-        private readonly GameModel gameModel;
+        private readonly Game game;
 
-        public ShootMode(GameModel gameModel, Button shootButton)
+        public ShootMode(Game game, Button shootButton)
         {
-            this.gameModel = gameModel;
-            shootButton.Click += (sender, args) =>
+            this.game = game;
+            shootButton.Click += (_, _) =>
             {
-                if (gameModel.PlayerDoingSomething) return;
-                if (gameModel.OnNewMapCell) gameModel.ExitScoutModeManually();
+                if (game.PlayerDoingSomething) return;
+                if (game.OnNewMapCell) game.ExitScoutModeManually();
                 ChangeTilesSprites(!IsInShootMode);
                 IsInShootMode = !IsInShootMode;
             };
@@ -28,12 +28,12 @@ namespace Piratico
 
         private void ChangeTilesSprites(bool show)
         {
-            var newImage = show ? Resources.ChosenSeaTile : Resources.SimpleSeaTile;
-            foreach (var tile in gameModel
+            foreach (var tile in game
                 .CurrentMapCell
-                .GetHorizontalAndVerticalSeaTiles(gameModel.Player.MapPosition))
+                .TileMap
+                .GetHorizontalAndVerticalSeaTiles(game.Player.MapPosition))
             {
-                tile.SpriteBox.Image = newImage;
+                tile.SpriteBox.Image = show ? Resources.ShootModeTile : tile.OriginalTile;
             }
         }
     }
