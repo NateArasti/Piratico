@@ -36,19 +36,19 @@ namespace Piratico
             this.RightButton = new System.Windows.Forms.Button();
             this.DownButton = new System.Windows.Forms.Button();
             this.Shoot = new System.Windows.Forms.Button();
-            this.Upgrade = new System.Windows.Forms.Button();
-            this.UpgradeCost = new System.Windows.Forms.Label();
             this.Crew = new System.Windows.Forms.Label();
-            this.Consumables = new System.Windows.Forms.Label();
             this.Gold = new System.Windows.Forms.Label();
             this.Strength = new System.Windows.Forms.Label();
             this.Skip = new System.Windows.Forms.Button();
-            this.IntroPanel = new System.Windows.Forms.Panel();
             this.IntroText = new System.Windows.Forms.Label();
             this.StartButton = new System.Windows.Forms.Button();
-            this.RestartButton = new System.Windows.Forms.Button();
-            this.EndGameText = new System.Windows.Forms.Label();
+            this.IntroPanel = new System.Windows.Forms.Panel();
+            this.UpgradeCost = new System.Windows.Forms.Label();
+            this.Upgrade = new System.Windows.Forms.Button();
+            this.Consumables = new System.Windows.Forms.Label();
             this.EndGamePanel = new System.Windows.Forms.Panel();
+            this.EndGameText = new System.Windows.Forms.Label();
+            this.RestartButton = new System.Windows.Forms.Button();
             this.IntroPanel.SuspendLayout();
             this.EndGamePanel.SuspendLayout();
             this.SuspendLayout();
@@ -120,29 +120,6 @@ namespace Piratico
             this.Shoot.Text = "shoot";
             this.Shoot.UseVisualStyleBackColor = true;
             // 
-            // Upgrade
-            // 
-            this.Upgrade.BackColor = System.Drawing.Color.SeaGreen;
-            this.Upgrade.Font = new System.Drawing.Font("Perpetua Titling MT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Upgrade.ForeColor = System.Drawing.Color.White;
-            this.Upgrade.Location = new System.Drawing.Point(1129, 380);
-            this.Upgrade.Name = "Upgrade";
-            this.Upgrade.Size = new System.Drawing.Size(130, 41);
-            this.Upgrade.TabIndex = 6;
-            this.Upgrade.Text = "Upgrade";
-            this.Upgrade.UseVisualStyleBackColor = false;
-            // 
-            // UpgradeCost
-            // 
-            this.UpgradeCost.AutoSize = true;
-            this.UpgradeCost.Font = new System.Drawing.Font("Perpetua Titling MT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpgradeCost.ForeColor = System.Drawing.Color.Beige;
-            this.UpgradeCost.Location = new System.Drawing.Point(1144, 424);
-            this.UpgradeCost.Name = "UpgradeCost";
-            this.UpgradeCost.Size = new System.Drawing.Size(103, 23);
-            this.UpgradeCost.TabIndex = 11;
-            this.UpgradeCost.Text = "Cost: 120";
-            // 
             // Crew
             // 
             this.Crew.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -154,18 +131,6 @@ namespace Piratico
             this.Crew.TabIndex = 13;
             this.Crew.Text = "Crew";
             this.Crew.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Consumables
-            // 
-            this.Consumables.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.Consumables.Font = new System.Drawing.Font("Perpetua Titling MT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Consumables.ForeColor = System.Drawing.Color.DarkSlateGray;
-            this.Consumables.Location = new System.Drawing.Point(1130, 316);
-            this.Consumables.Name = "Consumables";
-            this.Consumables.Size = new System.Drawing.Size(129, 52);
-            this.Consumables.TabIndex = 15;
-            this.Consumables.Text = "Consumables";
-            this.Consumables.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Gold
             // 
@@ -201,24 +166,12 @@ namespace Piratico
             this.Skip.Text = "skip";
             this.Skip.UseVisualStyleBackColor = true;
             // 
-            // IntroPanel
-            // 
-            this.IntroPanel.AutoSize = true;
-            this.IntroPanel.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.IntroPanel.Controls.Add(this.StartButton);
-            this.IntroPanel.Controls.Add(this.EndGamePanel);
-            this.IntroPanel.Controls.Add(this.IntroText);
-            this.IntroPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.IntroPanel.Location = new System.Drawing.Point(0, 0);
-            this.IntroPanel.Name = "IntroPanel";
-            this.IntroPanel.Size = new System.Drawing.Size(1280, 720);
-            this.IntroPanel.TabIndex = 17;
-            // 
             // IntroText
             // 
-            this.IntroText.Location = new System.Drawing.Point(262, 9);
+            this.IntroText.Font = new System.Drawing.Font("Perpetua Titling MT", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IntroText.Location = new System.Drawing.Point(222, 9);
             this.IntroText.Name = "IntroText";
-            this.IntroText.Size = new System.Drawing.Size(751, 631);
+            this.IntroText.Size = new System.Drawing.Size(833, 637);
             this.IntroText.TabIndex = 1;
             this.IntroText.Text = resources.GetString("IntroText.Text");
             this.IntroText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -234,25 +187,52 @@ namespace Piratico
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = false;
             // 
-            // RestartButton
+            // IntroPanel
             // 
-            this.RestartButton.BackColor = System.Drawing.Color.Azure;
-            this.RestartButton.ForeColor = System.Drawing.Color.Crimson;
-            this.RestartButton.Location = new System.Drawing.Point(575, 406);
-            this.RestartButton.Name = "RestartButton";
-            this.RestartButton.Size = new System.Drawing.Size(148, 54);
-            this.RestartButton.TabIndex = 0;
-            this.RestartButton.Text = "Restart";
-            this.RestartButton.UseVisualStyleBackColor = false;
+            this.IntroPanel.AutoSize = true;
+            this.IntroPanel.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.IntroPanel.Controls.Add(this.IntroText);
+            this.IntroPanel.Controls.Add(this.StartButton);
+            this.IntroPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.IntroPanel.Location = new System.Drawing.Point(0, 0);
+            this.IntroPanel.Name = "IntroPanel";
+            this.IntroPanel.Size = new System.Drawing.Size(1280, 720);
+            this.IntroPanel.TabIndex = 17;
             // 
-            // EndGameText
+            // UpgradeCost
             // 
-            this.EndGameText.Location = new System.Drawing.Point(320, 340);
-            this.EndGameText.Name = "EndGameText";
-            this.EndGameText.Size = new System.Drawing.Size(693, 63);
-            this.EndGameText.TabIndex = 1;
-            this.EndGameText.Text = "Ты умер и твоя игровая сессия закончилась(";
-            this.EndGameText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.UpgradeCost.AutoSize = true;
+            this.UpgradeCost.BackColor = System.Drawing.Color.Transparent;
+            this.UpgradeCost.Font = new System.Drawing.Font("Perpetua Titling MT", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpgradeCost.Location = new System.Drawing.Point(1145, 427);
+            this.UpgradeCost.Name = "UpgradeCost";
+            this.UpgradeCost.Size = new System.Drawing.Size(75, 26);
+            this.UpgradeCost.TabIndex = 22;
+            this.UpgradeCost.Text = "Cost:";
+            // 
+            // Upgrade
+            // 
+            this.Upgrade.BackColor = System.Drawing.Color.SeaGreen;
+            this.Upgrade.Font = new System.Drawing.Font("Perpetua Titling MT", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Upgrade.ForeColor = System.Drawing.Color.White;
+            this.Upgrade.Location = new System.Drawing.Point(1128, 380);
+            this.Upgrade.Name = "Upgrade";
+            this.Upgrade.Size = new System.Drawing.Size(137, 44);
+            this.Upgrade.TabIndex = 23;
+            this.Upgrade.Text = "Upgrade";
+            this.Upgrade.UseVisualStyleBackColor = false;
+            // 
+            // Consumables
+            // 
+            this.Consumables.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Consumables.Font = new System.Drawing.Font("Perpetua Titling MT", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Consumables.ForeColor = System.Drawing.Color.DarkSlateGray;
+            this.Consumables.Location = new System.Drawing.Point(1125, 316);
+            this.Consumables.Name = "Consumables";
+            this.Consumables.Size = new System.Drawing.Size(140, 52);
+            this.Consumables.TabIndex = 21;
+            this.Consumables.Text = "Consumables";
+            this.Consumables.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // EndGamePanel
             // 
@@ -264,27 +244,48 @@ namespace Piratico
             this.EndGamePanel.Location = new System.Drawing.Point(0, 0);
             this.EndGamePanel.Name = "EndGamePanel";
             this.EndGamePanel.Size = new System.Drawing.Size(1280, 720);
-            this.EndGamePanel.TabIndex = 18;
+            this.EndGamePanel.TabIndex = 20;
+            // 
+            // EndGameText
+            // 
+            this.EndGameText.Location = new System.Drawing.Point(320, 340);
+            this.EndGameText.Name = "EndGameText";
+            this.EndGameText.Size = new System.Drawing.Size(693, 63);
+            this.EndGameText.TabIndex = 1;
+            this.EndGameText.Text = "Неплохо держался, попробуй ещё раз :)";
+            this.EndGameText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // RestartButton
+            // 
+            this.RestartButton.BackColor = System.Drawing.Color.Azure;
+            this.RestartButton.ForeColor = System.Drawing.Color.Crimson;
+            this.RestartButton.Location = new System.Drawing.Point(575, 406);
+            this.RestartButton.Name = "RestartButton";
+            this.RestartButton.Size = new System.Drawing.Size(148, 54);
+            this.RestartButton.TabIndex = 0;
+            this.RestartButton.Text = "Restart";
+            this.RestartButton.UseVisualStyleBackColor = false;
             // 
             // PiraticoGame
             // 
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1280, 720);
-            this.Controls.Add(this.IntroPanel);
             this.Controls.Add(this.Skip);
-            this.Controls.Add(this.Consumables);
             this.Controls.Add(this.Gold);
             this.Controls.Add(this.Crew);
             this.Controls.Add(this.Strength);
-            this.Controls.Add(this.UpgradeCost);
             this.Controls.Add(this.Upgrade);
+            this.Controls.Add(this.UpgradeCost);
+            this.Controls.Add(this.Consumables);
             this.Controls.Add(this.Shoot);
             this.Controls.Add(this.DownButton);
             this.Controls.Add(this.RightButton);
             this.Controls.Add(this.LeftButton);
             this.Controls.Add(this.UpButton);
             this.Controls.Add(this.Scout);
+            this.Controls.Add(this.IntroPanel);
+            this.Controls.Add(this.EndGamePanel);
             this.Cursor = System.Windows.Forms.Cursors.Cross;
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Perpetua Titling MT", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -294,7 +295,6 @@ namespace Piratico
             this.Name = "PiraticoGame";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.IntroPanel.ResumeLayout(false);
-            this.IntroPanel.PerformLayout();
             this.EndGamePanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -308,19 +308,19 @@ namespace Piratico
         private System.Windows.Forms.Button RightButton;
         private System.Windows.Forms.Button DownButton;
         private System.Windows.Forms.Button Shoot;
-        private System.Windows.Forms.Button Upgrade;
-        private System.Windows.Forms.Label UpgradeCost;
         private System.Windows.Forms.Label Crew;
-        private System.Windows.Forms.Label Consumables;
         private System.Windows.Forms.Label Gold;
         private System.Windows.Forms.Label Strength;
         private System.Windows.Forms.Button Skip;
-        private System.Windows.Forms.Panel IntroPanel;
-        private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Label IntroText;
+        private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.Panel IntroPanel;
         private System.Windows.Forms.Panel EndGamePanel;
         private System.Windows.Forms.Label EndGameText;
         private System.Windows.Forms.Button RestartButton;
+        private System.Windows.Forms.Label Consumables;
+        private System.Windows.Forms.Label UpgradeCost;
+        private System.Windows.Forms.Button Upgrade;
     }
 }
 

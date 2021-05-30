@@ -105,9 +105,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SimpleIsland.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\SimpleSeaTile.png" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +142,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AttackTile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Island2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

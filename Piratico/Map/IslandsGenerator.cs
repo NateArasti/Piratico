@@ -4,23 +4,38 @@ using System.Drawing;
 
 namespace Piratico
 {
-    class IslandsGenerator
+    internal static class IslandsGenerator
     {
-        private static readonly (Bitmap bigSprite, MapTileType[,] tileTypes, Image[,] tileSprites)[] Islands = 
+        private static readonly (Bitmap bigSprite, MapTileType[,] tileTypes, Image[,] tileSprites)[] Islands =
         {
+            //Размеры массивов указаны для удобства
+            // ReSharper disable RedundantExplicitArraySize
             (
-                //Размеры массивов указаны для удобства
-                // ReSharper disable RedundantExplicitArraySize
-                Resources.SimpleIsland, 
+                Resources.Island1,
                 new MapTileType[5, 5]
                 {
-                    {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
-                    {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
-                    {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
-                    {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
-                    {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow}
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow
+                    }
                 },
-                    new Image[5, 5]
+                new Image[5, 5]
                 {
                     {null, null, null, null, null},
                     {null, null, null, null, null},
@@ -28,7 +43,187 @@ namespace Piratico
                     {null, null, null, null, null},
                     {null, null, null, null, null}
                 }
+            ),
+            (
+                Resources.Island2,
+                new MapTileType[6, 6]
+                {
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow, MapTileType.Shallow
+                    }
+                },
+                new Image[6, 6]
+                {
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null}
+                }
+            ),
+            (
+                Resources.Island3,
+                new MapTileType[6, 6]
+                {
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow, MapTileType.Shallow
+                    }
+                },
+                new Image[6, 6]
+                {
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null}
+                }
+            ),
+            (
+                Resources.Island4,
+                new MapTileType[6, 6]
+                {
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island,
+                        MapTileType.Island, MapTileType.Shallow
+                    },
+                    {
+                        MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow,
+                        MapTileType.Shallow, MapTileType.Shallow
+                    }
+                },
+                new Image[6, 6]
+                {
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null},
+                    {null, null, null, null, null, null}
+                }
             )
+            //(
+            //    Resources.Island5, 
+            //    new MapTileType[6, 8]
+            //    {
+            //        {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Sea, MapTileType.Sea},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow}
+            //    },
+            //        new Image[6, 8]
+            //    {
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //    }
+            //),
+            //(
+            //    Resources.Island6, 
+            //    new MapTileType[6, 8]
+            //    {
+            //        {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Sea, MapTileType.Sea, MapTileType.Sea},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Sea, MapTileType.Sea, MapTileType.Sea},
+            //    },
+            //        new Image[6, 8]
+            //    {
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //    }
+            //),
+            //(
+            //    Resources.Island7,
+            //    new MapTileType[6, 8]
+            //    {
+            //        {MapTileType.Sea, MapTileType.Sea, MapTileType.Sea, MapTileType.Sea, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
+            //        {MapTileType.Sea, MapTileType.Sea, MapTileType.Sea, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Island, MapTileType.Shallow},
+            //        {MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow, MapTileType.Shallow},
+            //    },
+            //    new Image[6, 8]
+            //    {
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //        {null, null, null, null, null, null, null, null},
+            //    }
+            //),
         };
 
         private static readonly Point CheckPoint = new(-1, -1);
@@ -46,14 +241,15 @@ namespace Piratico
             {
                 if (Random.Next(101) >= chanceOfGeneration) break;
                 var (spot, islandIndex) = FindSpotForIsland(resultMap);
-                if(spot != CheckPoint)
+                if (spot != CheckPoint)
                     PutIslandOnMap(resultMap, spot, islandIndex);
             }
 
             return resultMap;
         }
 
-        private static (Point spot, int islandIndex) FindSpotForIsland((MapTileType tileType, Image tileSprite)[,] currentMap)
+        private static (Point spot, int islandIndex) FindSpotForIsland(
+            (MapTileType tileType, Image tileSprite)[,] currentMap)
         {
             var possibleResults = new List<(Point spot, int islandIndex)>();
             for (var i = 0; i < currentMap.GetLength(0); i++)
@@ -64,10 +260,12 @@ namespace Piratico
                     if (CheckIfFits(point, k, currentMap))
                         possibleResults.Add((point, k));
             }
+
             return possibleResults.Count == 0 ? (CheckPoint, -1) : possibleResults[Random.Next(possibleResults.Count)];
         }
 
-        private static bool CheckIfFits(Point spot, int islandIndex, (MapTileType tileType, Image tileSprite)[,] currentMap)
+        private static bool CheckIfFits(Point spot, int islandIndex,
+            (MapTileType tileType, Image tileSprite)[,] currentMap)
         {
             var island = Islands[islandIndex].tileTypes;
             var width = island.GetLength(0);
@@ -77,13 +275,14 @@ namespace Piratico
                 spot.Y <= Player.PlayerStartPosition.Y && Player.PlayerStartPosition.Y < spot.Y + height) return false;
             for (var i = 0; i < width; i++)
             for (var j = 0; j < height; j++)
-                if (currentMap[spot.X + i, spot.Y + j].tileType != MapTileType.Sea && 
+                if (currentMap[spot.X + i, spot.Y + j].tileType != MapTileType.Sea &&
                     island[i, j] != MapTileType.Sea)
                     return false;
             return true;
         }
 
-        private static void PutIslandOnMap((MapTileType tileType, Image tileSprite)[,] currentMap, Point spot, int islandIndex)
+        private static void PutIslandOnMap((MapTileType tileType, Image tileSprite)[,] currentMap, Point spot,
+            int islandIndex)
         {
             var (bitmap, tileTypes, tiles) = Islands[islandIndex];
             var width = tileTypes.GetLength(0);
@@ -103,8 +302,7 @@ namespace Piratico
 
         private static Image CropImage(Image image, Rectangle selection)
         {
-            var bmp = image as Bitmap;
-            if (bmp == null)
+            if (!(image is Bitmap bmp))
                 throw new ArgumentException("No valid bitmap");
             var cropBmp = bmp.Clone(selection, bmp.PixelFormat);
 

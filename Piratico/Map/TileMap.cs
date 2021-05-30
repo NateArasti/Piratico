@@ -8,22 +8,21 @@ namespace Piratico
 {
     public class TileMap
     {
-        private static Size MapSize => MapCell.MapSize;
-
         public static IReadOnlyDictionary<Point, Direction> MapDirections = new Dictionary<Point, Direction>
         {
-            {new Point(), Direction.None },
+            {new Point(), Direction.None},
             {new Point(0, 1), Direction.Down},
             {new Point(0, -1), Direction.Up},
             {new Point(1, 0), Direction.Right},
             {new Point(-1, 0), Direction.Left}
         };
 
+        private readonly List<Point> allSeaTiles = new();
+
         private readonly int deltaFromBorders;
         private readonly Game game;
         private readonly MapTile[,] map = new MapTile[MapSize.Width, MapSize.Height];
         private readonly int[,] paths = new int[MapSize.Width * MapSize.Height, MapSize.Width * MapSize.Height];
-        private readonly List<Point> allSeaTiles = new();
 
         public TileMap(int deltaFromBorders, Game game, Panel mapCellControlPanel)
         {
@@ -32,6 +31,8 @@ namespace Piratico
             GenerateMap(mapCellControlPanel);
             GetPathsBetweenTiles();
         }
+
+        private static Size MapSize => MapCell.MapSize;
 
         private void GenerateMap(Panel mapCellControlPanel)
         {
@@ -43,7 +44,8 @@ namespace Piratico
                 switch (islandsMap[i, j].tileType)
                 {
                     case MapTileType.Island:
-                        map[i, j] = new MapTile(point, -1, game, islandsMap[i, j].tileType, islandsMap[i, j].tileSprite);
+                        map[i, j] = new MapTile(point, -1, game, islandsMap[i, j].tileType,
+                            islandsMap[i, j].tileSprite);
                         break;
                     case MapTileType.Shallow:
                         allSeaTiles.Add(point);
@@ -72,8 +74,10 @@ namespace Piratico
             var length = allSeaTiles.Count;
             for (var i = 0; i < length; i++)
             for (var j = i; j < length; j++)
-            {
-                if (i == j) paths[i, j] = 0;
+                if (i == j)
+                {
+                    paths[i, j] = 0;
+                }
                 else if (MapDirections.ContainsKey(new Point(allSeaTiles[i].X - allSeaTiles[j].X,
                     allSeaTiles[i].Y - allSeaTiles[j].Y)))
                 {
@@ -85,15 +89,13 @@ namespace Piratico
                     paths[i, j] = infinite;
                     paths[j, i] = infinite;
                 }
-            }
+
             for (var k = 0; k < length; ++k)
             for (var i = 0; i < length; ++i)
             for (var j = 0; j < length; ++j)
-            {
                 if (paths[i, k] < infinite && paths[k, j] < infinite &&
                     paths[i, j] > paths[i, k] + paths[k, j])
                     paths[i, j] = paths[i, k] + paths[k, j];
-            }
         }
 
         public (MapTile newTile, Point finalDirection) GetNextShipMove(Point shipMapPosition, Point finishMapPosition)
@@ -117,15 +119,19 @@ namespace Piratico
             return (newTile, finalDirection);
         }
 
-        private static bool InBorders(Point point) =>
-            point.X >= 0 && point.X < MapSize.Width && point.Y >= 0 && point.Y < MapSize.Height;
+        private static bool InBorders(Point point)
+        {
+            return point.X >= 0 && point.X < MapSize.Width && point.Y >= 0 && point.Y < MapSize.Height;
+        }
 
-        public IEnumerable<MapTile> GetNeighborTiles(Point mapPosition) =>
-            from direction in MapDirections.Keys
-            select new Point(mapPosition.X + direction.X, mapPosition.Y + direction.Y)
-            into newPoint
-            where InBorders(newPoint) && map[newPoint.X, newPoint.Y].TileType != MapTileType.Island
-            select map[newPoint.X, newPoint.Y];
+        public IEnumerable<MapTile> GetNeighborTiles(Point mapPosition)
+        {
+            return from direction in MapDirections.Keys
+                select new Point(mapPosition.X + direction.X, mapPosition.Y + direction.Y)
+                into newPoint
+                where InBorders(newPoint) && map[newPoint.X, newPoint.Y].TileType != MapTileType.Island
+                select map[newPoint.X, newPoint.Y];
+        }
 
         public MapTile GetMapTile(Point mapPosition)
         {
@@ -133,8 +139,10 @@ namespace Piratico
             return map[mapPosition.X, mapPosition.Y];
         }
 
-        public int GetPathLengthToTile(MapTile startMapTile, MapTile endMapTile) =>
-            paths[startMapTile.Index, endMapTile.Index];
+        public int GetPathLengthToTile(MapTile startMapTile, MapTile endMapTile)
+        {
+            return paths[startMapTile.Index, endMapTile.Index];
+        }
 
         public static (Point originBorderPoint, Point newBorderPoint) GetMinPathBetweenMapCells(
             MapCell from,
@@ -179,14 +187,14 @@ namespace Piratico
                 [Direction.Up] = false,
                 [Direction.Down] = false,
                 [Direction.Right] = false,
-                [Direction.Left] = false,
+                [Direction.Left] = false
             };
-            for (var i = 1; ; i++)
+            for (var i = 1;; i++)
             {
-                if(checks.All(pair => pair.Value)) yield break;
+                if (checks.All(pair => pair.Value)) yield break;
                 foreach (var point in MapDirections.Skip(1))
                 {
-                    if(checks[point.Value]) continue;
+                    if (checks[point.Value]) continue;
                     var newPoint = startPosition + new Size(point.Key.X * i, point.Key.Y * i);
                     if (!InBorders(newPoint) ||
                         GetMapTile(newPoint).TileType == MapTileType.Island)
@@ -194,6 +202,7 @@ namespace Piratico
                         checks[point.Value] = true;
                         continue;
                     }
+
                     if (GetMapTile(newPoint).HasShipOnTile) checks[point.Value] = true;
                     yield return GetMapTile(newPoint);
                 }

@@ -38,6 +38,8 @@ namespace Piratico
         {
             StartButton.Parent = IntroPanel;
             IntroText.Parent = IntroPanel;
+            IntroPanel.Parent = this;
+            IntroPanel.BringToFront();
             StartButton.Click += (_, _) => Controls.Remove(IntroPanel);
         }
 
@@ -53,11 +55,11 @@ namespace Piratico
         private void InitializePlayerParamsUI()
         {
             DrawPlayerResources();
-            Upgrade.Click += (_, _) =>
+            foreach (var control in new Control[] { Strength, Crew, Gold, Consumables, Upgrade, UpgradeCost })
             {
-                game.Player.UpgradeStats();
-                game.Player.EndStep();
-            };
+                control.BringToFront();
+            }
+            Upgrade.Click += (_, _) => game.Player.UpgradeStats();
         }
 
         public void DrawPlayerResources()

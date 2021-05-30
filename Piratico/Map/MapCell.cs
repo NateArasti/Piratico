@@ -8,13 +8,12 @@ namespace Piratico
     public class MapCell
     {
         public static Size MapSize = new(20, 15);
+        private readonly int distanceFromStartCell;
 
         private readonly Game game;
-        private readonly Dictionary<Direction, MapCell> neighbors;
-
-        public List<Enemy> Enemies { get; } = new();
 
         public readonly Panel MapCellControlPanel;
+        private readonly Dictionary<Direction, MapCell> neighbors;
         public readonly TileMap TileMap;
 
         public MapCell(Game game)
@@ -60,7 +59,11 @@ namespace Piratico
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+
+            distanceFromStartCell = neighbor.distanceFromStartCell + 1;
         }
+
+        public List<Enemy> Enemies { get; } = new();
 
         private void SpawnEnemies()
         {
@@ -74,11 +77,12 @@ namespace Piratico
                     Player.PlayerStartPosition == mapPosition ||
                     mapTile.HasShipOnTile) continue;
                 enemyCount -= 1;
-                var enemy = new Enemy(Resources.EnemyShip,
+                var enemy = new Enemy(
                     new Size(Game.TileSize, Game.TileSize),
                     mapPosition,
                     mapTile.SpriteBox,
-                    game);
+                    game,
+                    distanceFromStartCell);
                 Enemies.Add(enemy);
                 mapTile.HasShipOnTile = true;
             } while (enemyCount > 0);
@@ -88,11 +92,14 @@ namespace Piratico
         {
             foreach (var value in Enum.GetValues(typeof(Direction)))
             {
-                var direction = (Direction)value;
+                var direction = (Direction) value;
                 neighbors[direction] ??= new MapCell(direction, this);
             }
         }
 
-        public MapCell GetNeighbor(Direction direction) => neighbors[direction];
+        public MapCell GetNeighbor(Direction direction)
+        {
+            return neighbors[direction];
+        }
     }
 }

@@ -139,6 +139,27 @@
   <data name="EnemyShip_66" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\EnemyShip_66.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Island1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Island2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Island3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Island4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Island5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Island6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Island7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Island7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="PlayerShip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\PlayerShip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -153,9 +174,6 @@
   </data>
   <data name="ShootModeTile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\ShootModeTile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SimpleIsland" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\SimpleIsland.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SimpleSeaTile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\SimpleSeaTile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

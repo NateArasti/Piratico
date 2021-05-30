@@ -16,27 +16,23 @@ namespace Piratico
             {Direction.Left, Rotation.Left}
         };
 
+        protected readonly Game Game;
+
         public readonly PictureBox SpriteBox;
 
-        public MapTile CurrentMapTile => Game.CurrentMapCell.TileMap.GetMapTile(MapPosition);
-        public Point MapPosition { get; private set; }
-        public bool IsShooting { get; set; }
-
-        protected ShipParams ShipParams;
-        protected readonly Game Game;
-        protected IReadOnlyList<Image> StateSprites;
+        private Rotation currentRotation = Rotation.Down;
         protected bool IsDead;
 
-        private Rotation currentRotation = Rotation.Down;
+        protected ShipParams ShipParams;
+        protected IReadOnlyList<Image> StateSprites;
 
-        public Ship(Image sprite, Size spriteSize, Point mapPosition, PictureBox parentPictureBox, Game game)
+        public Ship(Size spriteSize, Point mapPosition, PictureBox parentPictureBox, Game game)
         {
             Game = game;
             MapPosition = mapPosition;
             SpriteBox = new PictureBox
             {
                 Parent = parentPictureBox,
-                Image = sprite,
                 Size = spriteSize,
                 BackColor = Color.Transparent,
                 ForeColor = Color.Transparent,
@@ -44,12 +40,16 @@ namespace Piratico
             };
         }
 
+        public MapTile CurrentMapTile => Game.CurrentMapCell.TileMap.GetMapTile(MapPosition);
+        public Point MapPosition { get; private set; }
+        public bool IsShooting { get; set; }
+
         private void RotateTo(Rotation newRotation)
         {
-            if(newRotation == Rotation.None) return;
-            var delta = newRotation > currentRotation ?
-                360 - (newRotation - currentRotation) :
-                currentRotation - newRotation;
+            if (newRotation == Rotation.None) return;
+            var delta = newRotation > currentRotation
+                ? 360 - (newRotation - currentRotation)
+                : currentRotation - newRotation;
             switch (delta)
             {
                 case 90:
@@ -62,6 +62,7 @@ namespace Piratico
                     SpriteBox.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
                     break;
             }
+
             currentRotation = newRotation;
         }
 
@@ -75,15 +76,16 @@ namespace Piratico
 
         public void BoardShip(Ship shipToBoard)
         {
-            if(shipToBoard.IsDead) CollectResources(shipToBoard.ShipParams, true);
+            if (shipToBoard.IsDead) CollectResources(shipToBoard.ShipParams, true);
             while (!IsDead && !shipToBoard.IsDead)
             {
                 ApplyDamage(shipToBoard.CountDamage());
-                if(IsDead)
+                if (IsDead)
                 {
                     shipToBoard.CollectResources(shipToBoard.ShipParams);
                     return;
                 }
+
                 shipToBoard.ApplyDamage(CountDamage());
                 if (shipToBoard.IsDead)
                 {
@@ -99,9 +101,9 @@ namespace Piratico
             shipParams.MarkCollected();
             var collectionModifier = shipWasDead ? 0.3 : 0.6;
             ShipParams.AddCollectedResources(
-                (int)(shipParams.CrewAmount * collectionModifier),
-                (int)(shipParams.Consumables * collectionModifier),
-                (int)(shipParams.Gold * collectionModifier));
+                (int) (shipParams.CrewAmount * collectionModifier),
+                (int) (shipParams.Consumables * collectionModifier),
+                (int) (shipParams.Gold * collectionModifier));
             if (this is Player)
                 Game.UpdatePlayerResourcesUI();
         }
@@ -123,17 +125,17 @@ namespace Piratico
         private int CountDamage()
         {
             var random = new Random();
-            return (int)(ShipParams.MaxDamage *
-                         (ShipParams.Strength / 100.0 * 
-                          ((double)ShipParams.CrewAmount / ShipParams.MaxCrewAmount) +
-                          random.NextDouble()));
+            return (int) (ShipParams.MaxDamage *
+                          (ShipParams.Strength / 100.0 *
+                           ((double) ShipParams.CrewAmount / ShipParams.MaxCrewAmount) +
+                           random.NextDouble()));
         }
 
         private void ApplyDamage(int damage)
         {
             ShipParams.CalculateDamageEffects(damage);
             CheckCurrentShipState();
-            if(this is Player)
+            if (this is Player)
                 Game.UpdatePlayerResourcesUI();
         }
 
@@ -141,11 +143,12 @@ namespace Piratico
         {
             SpriteBox.Image = ShipParams.Strength switch
             {
-                > 66 => StateSprites[0],
-                > 33 => StateSprites[1],
-                > 0 => StateSprites[2],
-                <= 0 => StateSprites[3]
+                > 66 => new Bitmap(StateSprites[0]),
+                > 33 => new Bitmap(StateSprites[1]),
+                > 0 => new Bitmap(StateSprites[2]),
+                <= 0 => new Bitmap(StateSprites[3])
             };
+
             var previousRotation = currentRotation;
             currentRotation = Rotation.Down;
             RotateTo(previousRotation);
@@ -153,7 +156,7 @@ namespace Piratico
             if (ShipParams.Strength > 0) return;
             IsDead = true;
             var count = 0;
-            var endDelay = new Timer() {Interval = 200};
+            var endDelay = new Timer {Interval = 200};
             endDelay.Tick += (_, _) =>
             {
                 count += 1;

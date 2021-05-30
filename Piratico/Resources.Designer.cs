@@ -133,6 +133,76 @@ namespace Piratico {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Island1 {
+            get {
+                object obj = ResourceManager.GetObject("Island1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Island2 {
+            get {
+                object obj = ResourceManager.GetObject("Island2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Island3 {
+            get {
+                object obj = ResourceManager.GetObject("Island3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Island4 {
+            get {
+                object obj = ResourceManager.GetObject("Island4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Island5 {
+            get {
+                object obj = ResourceManager.GetObject("Island5", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Island6 {
+            get {
+                object obj = ResourceManager.GetObject("Island6", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Island7 {
+            get {
+                object obj = ResourceManager.GetObject("Island7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PlayerShip {
             get {
                 object obj = ResourceManager.GetObject("PlayerShip", resourceCulture);
@@ -176,16 +246,6 @@ namespace Piratico {
         internal static System.Drawing.Bitmap ShootModeTile {
             get {
                 object obj = ResourceManager.GetObject("ShootModeTile", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap SimpleIsland {
-            get {
-                object obj = ResourceManager.GetObject("SimpleIsland", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

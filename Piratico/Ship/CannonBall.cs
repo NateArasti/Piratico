@@ -6,11 +6,11 @@ namespace Piratico
 {
     public class CannonBall
     {
-        private readonly Ship shooterShip;
-        private readonly PictureBox pictureBox;
-        private bool isEnded;
-        private readonly Size positionDelta;
         private const int Speed = 16;
+        private readonly PictureBox pictureBox;
+        private readonly Size positionDelta;
+        private readonly Ship shooterShip;
+        private bool isEnded;
 
         public CannonBall(Direction direction, Ship ship)
         {
@@ -65,7 +65,10 @@ namespace Piratico
                     if (shooterShip is not Player playerShip) return;
                     playerShip.EndStep();
                 }
-                else Move(endPoint);
+                else
+                {
+                    Move(endPoint);
+                }
             };
             timer.Start();
         }

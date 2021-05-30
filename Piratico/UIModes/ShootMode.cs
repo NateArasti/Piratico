@@ -4,8 +4,6 @@ namespace Piratico
 {
     public class ShootMode
     {
-        public bool IsInShootMode { get; private set; }
-
         private readonly Game game;
 
         public ShootMode(Game game, Button shootButton)
@@ -20,6 +18,8 @@ namespace Piratico
             };
         }
 
+        public bool IsInShootMode { get; private set; }
+
         public void TurnOff()
         {
             IsInShootMode = false;
@@ -32,9 +32,7 @@ namespace Piratico
                 .CurrentMapCell
                 .TileMap
                 .GetHorizontalAndVerticalSeaTiles(game.Player.MapPosition))
-            {
                 tile.SpriteBox.Image = show ? Resources.ShootModeTile : tile.OriginalTile;
-            }
         }
     }
 }

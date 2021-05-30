@@ -13,13 +13,13 @@ namespace Piratico
     public class MapTile
     {
         private readonly Image chosenTile = Resources.ChosenTile;
-
-        public readonly MapTileType TileType;
-        public readonly PictureBox SpriteBox;
-        public readonly Image OriginalTile;
+        public readonly int Index;
 
         public readonly Point MapPosition;
-        public readonly int Index;
+        public readonly Image OriginalTile;
+        public readonly PictureBox SpriteBox;
+
+        public readonly MapTileType TileType;
 
         public bool HasShipOnTile;
 
@@ -38,7 +38,7 @@ namespace Piratico
                 BackColor = Color.Transparent
             };
 
-            if(TileType != MapTileType.Island)
+            if (TileType != MapTileType.Island)
             {
                 SpriteBox.MouseEnter += (_, _) =>
                 {
@@ -52,7 +52,7 @@ namespace Piratico
                 };
                 SpriteBox.MouseDoubleClick += (_, _) =>
                 {
-                    if(game.IsInShootMode) return;
+                    if (game.IsInShootMode) return;
                     if (game.OnNewMapCell)
                         game.MoveToNewMapCell(this);
                     else
