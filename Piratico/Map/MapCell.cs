@@ -7,7 +7,7 @@ namespace Piratico
 {
     public class MapCell
     {
-        public static Size MapSize = new(20, 15);
+        public static Size MapSize = new(24, 18);
         private readonly int distanceFromStartCell;
 
         private readonly Game game;

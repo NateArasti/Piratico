@@ -189,7 +189,7 @@ namespace Piratico
                 [Direction.Right] = false,
                 [Direction.Left] = false
             };
-            for (var i = 1;; i++)
+            for (var i = 1; i < 10; i++)
             {
                 if (checks.All(pair => pair.Value)) yield break;
                 foreach (var point in MapDirections.Skip(1))
